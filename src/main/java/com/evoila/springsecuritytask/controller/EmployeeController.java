@@ -14,7 +14,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/v1/employee")
+@RequestMapping("/api/v1/employees")
 public class EmployeeController {
 
     @Autowired
