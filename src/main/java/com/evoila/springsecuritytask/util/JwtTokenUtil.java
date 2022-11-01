@@ -1,7 +1,6 @@
 package com.evoila.springsecuritytask.util;
 
 import com.evoila.springsecuritytask.model.AuthUser;
-import com.evoila.springsecuritytask.model.User;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
