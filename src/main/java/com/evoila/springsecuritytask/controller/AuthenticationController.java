@@ -2,6 +2,7 @@ package com.evoila.springsecuritytask.controller;
 
 import com.evoila.springsecuritytask.model.AuthRequest;
 import com.evoila.springsecuritytask.model.AuthResponse;
+import com.evoila.springsecuritytask.model.AuthUser;
 import com.evoila.springsecuritytask.model.User;
 import com.evoila.springsecuritytask.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,10 @@ public class AuthenticationController {
                             request.getUsername(), request.getPassword())
             );
 
-            User user = (User) authentication.getPrincipal();
-            String accessToken = jwtUtil.generateAccessToken(user);
-            AuthResponse response = new AuthResponse(user.getUsername(),
-                                                     user.getEmail(),
+            AuthUser authUser = new AuthUser((User) authentication.getPrincipal());
+            String accessToken = jwtUtil.generateAccessToken(authUser);
+            AuthResponse response = new AuthResponse(authUser.getUser().getUsername(),
+                                                     authUser.getUser().getEmail(),
                                                      accessToken);
 
             return ResponseEntity.ok().body(response);

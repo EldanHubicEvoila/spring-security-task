@@ -1,6 +1,7 @@
 package com.evoila.springsecuritytask.security;
 
 import com.evoila.springsecuritytask.repository.UserRepository;
+import com.evoila.springsecuritytask.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,35 +24,11 @@ import javax.servlet.http.HttpServletResponse;
 @EnableWebSecurity
 public class SecurityConfig {
 
-
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     @Autowired
     private JwtTokenFilter jwtTokenFilter;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserDetailsService() {
-
-            @Override
-            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                return userRepository.findByUsername(username)
-                        .orElseThrow(
-                                () -> new UsernameNotFoundException("User " + username + " not found"));
-            }
-        };
-    }
-
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
-    }
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
@@ -76,4 +53,22 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return userService;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
+
+
 }

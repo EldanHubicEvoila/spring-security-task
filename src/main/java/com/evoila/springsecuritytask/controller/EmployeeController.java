@@ -14,24 +14,25 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/employee")
 public class EmployeeController {
 
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @GetMapping("/employees")
+    @GetMapping()
     public List<Employee> getEmployees() {
         return employeeRepository.findAll();
     }
 
 
-    @PostMapping("/employees")
-    public Employee createEmployee(@RequestBody Employee employee) {
-        return employeeRepository.save(employee);
+    @PostMapping()
+    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
+        employeeRepository.save(employee);
+        return ResponseEntity.ok().body(employee);
     }
 
-    @GetMapping("/employees/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + " doesn't exist."));
@@ -39,7 +40,7 @@ public class EmployeeController {
         return ResponseEntity.ok(employee);
     }
 
-    @PutMapping("/employees/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employeeDetails) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + " doesn't exist."));
@@ -53,7 +54,7 @@ public class EmployeeController {
         return ResponseEntity.ok(updatedEmployee);
     }
 
-    @DeleteMapping("/employees/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteEmployee(@PathVariable Long id){
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id :" + id));

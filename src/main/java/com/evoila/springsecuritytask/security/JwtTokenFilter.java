@@ -1,5 +1,6 @@
 package com.evoila.springsecuritytask.security;
 
+import com.evoila.springsecuritytask.model.AuthUser;
 import com.evoila.springsecuritytask.model.User;
 import com.evoila.springsecuritytask.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,17 +47,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private boolean hasAuthorizationBearer(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
-        if (ObjectUtils.isEmpty(header) || !header.startsWith("Bearer")) {
-            return false;
-        }
-
-        return true;
+        return !ObjectUtils.isEmpty(header) && header.startsWith("Bearer");
     }
 
     private String getAccessToken(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
-        String token = header.split(" ")[1].trim();
-        return token;
+        return header.split(" ")[1].trim();
     }
 
     private void setAuthenticationContext(String token, HttpServletRequest request) {
@@ -72,12 +68,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private UserDetails getUserDetails(String token) {
         User userDetails = new User();
+        AuthUser authUser = new AuthUser(userDetails);
         String[] jwtSubject = jwtUtil.getSubject(token).split(",");
 
-        userDetails.setId(Long.parseLong(jwtSubject[0]));
-        userDetails.setUsername(jwtSubject[1]);
-        userDetails.setEmail((jwtSubject[2]));
+        authUser.getUser().setId(Long.parseLong(jwtSubject[0]));
+        authUser.getUser().setUsername(jwtSubject[1]);
+        authUser.getUser().setEmail((jwtSubject[2]));
 
-        return userDetails;
+        return authUser;
     }
 }
