@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authRequest -> authRequest
-                        .antMatchers("/auth/login", "/docs/**", "/users")
+                        .antMatchers("/auth/login")
                         .permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(exceptionHandling -> exceptionHandling
@@ -38,8 +38,7 @@ public class SecurityConfig {
                                 (request, response, ex) -> {
                                     response.sendError(
                                             HttpServletResponse.SC_UNAUTHORIZED,
-                                            ex.getMessage()
-                                    );
+                                            ex.getMessage());
                                 }
                         ));
 
