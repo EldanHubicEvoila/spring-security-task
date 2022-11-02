@@ -24,7 +24,7 @@ public class AuthenticationService {
     @Autowired
     JwtTokenUtil jwtUtil;
 
-    public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthRequest request) {
+    public AuthResponse login(@RequestBody @Valid AuthRequest request) {
             Authentication authentication = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getUsername(), request.getPassword())
@@ -32,10 +32,9 @@ public class AuthenticationService {
 
             AuthUser authUser = (AuthUser) authentication.getPrincipal();
             String accessToken = jwtUtil.generateAccessToken(authUser);
-            AuthResponse response = new AuthResponse(authUser.getUser().getUsername(),
-                    authUser.getUser().getEmail(),
-                    accessToken);
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        return new AuthResponse(authUser.getUser().getUsername(),
+                authUser.getUser().getEmail(),
+                accessToken);
     }
 }

@@ -20,28 +20,20 @@ public class EmployeeService {
     EmployeeRepository employeeRepository;
 
 
-    public ResponseEntity<List<Employee>> getEmployees() {
-        if(employeeRepository.findAll().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-        return new ResponseEntity<>(employeeRepository.findAll(), HttpStatus.OK);
+    public List<Employee> getEmployees() {
+        return employeeRepository.findAll();
     }
 
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        employeeRepository.save(employee);
-
-        return new ResponseEntity<>(employee, HttpStatus.CREATED);
+    public Employee createEmployee(@RequestBody Employee employee) {
+        return employeeRepository.save(employee);
     }
 
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
-        Employee employee = employeeRepository.findById(id)
+    public Employee getEmployeeById(@PathVariable Long id) {
+        return employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + " doesn't exist."));
-
-        return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employeeDetails) {
+    public Employee updateEmployee(@PathVariable Long id, @RequestBody Employee employeeDetails) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + " doesn't exist."));
 
@@ -49,17 +41,15 @@ public class EmployeeService {
         employee.setLastName(employeeDetails.getLastName());
         employee.setEmail(employeeDetails.getEmail());
 
-        Employee updatedEmployee = employeeRepository.save(employee);
-
-        return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
+        return employeeRepository.save(employee);
     }
 
-    public ResponseEntity<Map<String, Boolean>> deleteEmployee(@PathVariable Long id){
+    public HttpStatus deleteEmployee(@PathVariable Long id){
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + " doesn't exist."));
 
         employeeRepository.delete(employee);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return HttpStatus.OK;
     }
 }
