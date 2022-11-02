@@ -36,6 +36,6 @@ public class AuthenticationService {
                     authUser.getUser().getEmail(),
                     accessToken);
 
-            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
