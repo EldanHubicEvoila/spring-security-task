@@ -1,4 +1,4 @@
-package com.evoila.springsecuritytask.exception;
+package com.evoila.springsecuritytask.model;
 
 import lombok.Getter;
 import lombok.Setter;

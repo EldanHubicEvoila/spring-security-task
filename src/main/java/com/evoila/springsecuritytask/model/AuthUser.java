@@ -13,9 +13,11 @@ public class AuthUser implements UserDetails {
 
     private final User user;
 
+
     public AuthUser(User user) {
         this.user = user;
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

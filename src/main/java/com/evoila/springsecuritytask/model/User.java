@@ -26,6 +26,7 @@ public class User {
     @Column(length = 64)
     private String password;
 
+
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;

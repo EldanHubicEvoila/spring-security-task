@@ -1,5 +1,6 @@
 package com.evoila.springsecuritytask.exception;
 
+import com.evoila.springsecuritytask.model.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
