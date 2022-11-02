@@ -2,7 +2,6 @@ package com.evoila.springsecuritytask.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -10,12 +9,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AuthResponse {
 
-    private @NonNull String username;
-    private @NonNull String accessToken;
-    private @NonNull String email;
+    private String username;
+    private String accessToken;
+    private String email;
 
 
-    public AuthResponse(@NonNull String username,@NonNull String email,@NonNull String accessToken) {
+    public AuthResponse(String username,
+                        String email,
+                        String accessToken) {
         this.username = username;
         this.email = email;
         this.accessToken = accessToken;

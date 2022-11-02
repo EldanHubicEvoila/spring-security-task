@@ -1,4 +1,4 @@
-package com.evoila.springsecuritytask.model;
+package com.evoila.springsecuritytask.exception.exceptionModel;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +16,10 @@ public class ErrorMessage {
     private String description;
 
 
-    public ErrorMessage(int statusCode, Date timeStamp, String message, String description) {
+    public ErrorMessage(int statusCode,
+                        Date timeStamp,
+                        String message,
+                        String description) {
         this.statusCode = statusCode;
         this.timeStamp = timeStamp;
         this.message = message;

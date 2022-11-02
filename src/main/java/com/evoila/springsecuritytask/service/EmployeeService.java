@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -22,18 +23,18 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Employee createEmployee(@RequestBody Employee employee) {
+    public Employee createEmployee(@Valid @RequestBody Employee employee) {
         return employeeRepository.save(employee);
     }
 
     public Employee getEmployeeById(@PathVariable Long id) {
         return employeeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + " doesn't exist."));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + " doesn't exist"));
     }
 
-    public Employee updateEmployee(@PathVariable Long id, @RequestBody Employee employeeDetails) {
+    public Employee updateEmployee(@PathVariable Long id, @Valid @RequestBody Employee employeeDetails) {
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + " doesn't exist."));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + " doesn't exist"));
 
         employee.setFirstName(employeeDetails.getFirstName());
         employee.setLastName(employeeDetails.getLastName());
@@ -42,9 +43,9 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public HttpStatus deleteEmployee(@PathVariable Long id){
+    public HttpStatus deleteEmployee(@PathVariable Long id) {
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + " doesn't exist."));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + " doesn't exist"));
 
         employeeRepository.delete(employee);
 
