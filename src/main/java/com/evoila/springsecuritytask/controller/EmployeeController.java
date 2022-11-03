@@ -43,7 +43,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteEmployee(@PathVariable Long id) {
-        return new ResponseEntity<>(employeeService.deleteEmployee(id));
+    public ResponseEntity<Boolean> deleteEmployee(@PathVariable Long id) {
+        return new ResponseEntity<>(employeeService.deleteEmployee(id), HttpStatus.OK);
     }
 }

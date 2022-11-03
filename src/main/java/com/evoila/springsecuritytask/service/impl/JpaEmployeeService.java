@@ -8,7 +8,6 @@ import com.evoila.springsecuritytask.service.EmployeeService;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class JPAEmployeeService implements EmployeeService {
+public class JpaEmployeeService implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
 
@@ -48,12 +47,12 @@ public class JPAEmployeeService implements EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public HttpStatus deleteEmployee(@PathVariable Long id) {
+    public boolean deleteEmployee(@PathVariable Long id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + " doesn't exist"));
 
         employeeRepository.delete(employee);
 
-        return HttpStatus.OK;
+        return true;
     }
 }

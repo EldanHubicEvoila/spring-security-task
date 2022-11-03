@@ -12,5 +12,5 @@ public interface EmployeeService {
     Employee createEmployee(Employee employee);
     Employee getEmployeeById(Long id);
     Employee updateEmployee(Long id, Employee employee);
-    HttpStatus deleteEmployee(Long id);
+    boolean deleteEmployee(Long id);
 }
