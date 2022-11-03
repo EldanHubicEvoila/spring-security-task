@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class JpaEmployeeService implements EmployeeService {
+public class JPAEmployeeService implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
 

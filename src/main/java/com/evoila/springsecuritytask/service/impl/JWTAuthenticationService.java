@@ -20,7 +20,7 @@ import javax.validation.Valid;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationServiceImpl implements AuthenticationService {
+public class JWTAuthenticationService implements AuthenticationService {
 
     private final AuthenticationManager authManager;
     private final JwtTokenUtil jwtUtil;

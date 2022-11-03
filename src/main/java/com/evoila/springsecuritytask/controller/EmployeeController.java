@@ -2,7 +2,6 @@ package com.evoila.springsecuritytask.controller;
 
 
 import com.evoila.springsecuritytask.model.Employee;
-import com.evoila.springsecuritytask.service.impl.JpaEmployeeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,7 @@ import java.util.List;
 public class EmployeeController {
 
     @Autowired
-    private JpaEmployeeService JPAEmployeeService;
+    private com.evoila.springsecuritytask.service.impl.JPAEmployeeService JPAEmployeeService;
 
 
     @GetMapping()
