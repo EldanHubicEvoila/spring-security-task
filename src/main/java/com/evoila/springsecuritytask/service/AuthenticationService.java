@@ -22,14 +22,15 @@ public class AuthenticationService {
     @Autowired
     JwtTokenUtil jwtUtil;
 
-    public AuthResponse login(@RequestBody @Valid AuthRequest request) {
-            Authentication authentication = authManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getUsername(), request.getPassword())
-            );
 
-            AuthUser authUser = (AuthUser) authentication.getPrincipal();
-            String accessToken = jwtUtil.generateAccessToken(authUser);
+    public AuthResponse login(@RequestBody @Valid AuthRequest request) {
+        Authentication authentication = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(), request.getPassword())
+        );
+
+        AuthUser authUser = (AuthUser) authentication.getPrincipal();
+        String accessToken = jwtUtil.generateAccessToken(authUser);
 
         return new AuthResponse(authUser.getUser().getUsername(),
                 authUser.getUser().getEmail(),
