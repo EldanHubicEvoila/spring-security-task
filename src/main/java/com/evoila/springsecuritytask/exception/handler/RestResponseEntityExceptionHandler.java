@@ -1,7 +1,7 @@
-package com.evoila.springsecuritytask.exception;
+package com.evoila.springsecuritytask.exception.handler;
 
-import com.evoila.springsecuritytask.exception.exceptionModel.ErrorDetails;
-import com.evoila.springsecuritytask.exception.exceptionModel.ErrorMessage;
+import com.evoila.springsecuritytask.exception.ResourceNotFoundException;
+import com.evoila.springsecuritytask.exception.response.ErrorResponse;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,38 +20,38 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
+
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorMessage> resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
-        ErrorMessage message = new ErrorMessage(
+    public ResponseEntity<ErrorResponse> resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 new Date(),
                 ex.getMessage(),
                 request.getDescription(false));
 
-        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorMessage> badCredentialsException(BadCredentialsException ex, WebRequest request) {
-        ErrorMessage message = new ErrorMessage(
+    public ResponseEntity<ErrorResponse> badCredentialsException(BadCredentialsException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.UNAUTHORIZED.value(),
                 new Date(),
                 ex.getMessage(),
                 request.getDescription(false));
 
-        return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
-
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorMessage> globalExceptionHandler(Exception ex, WebRequest request) {
-        ErrorMessage message = new ErrorMessage(
+    public ResponseEntity<ErrorResponse> globalExceptionHandler(Exception ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 new Date(),
                 ex.getMessage(),
                 request.getDescription(false));
 
-        return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
@@ -64,15 +64,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
-        ErrorMessage errorDetails = new ErrorDetails(
+        ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 new Date(),
                 ex.getMessage(),
                 request.getDescription(false),
                 errorList);
 
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
-
-
 }
