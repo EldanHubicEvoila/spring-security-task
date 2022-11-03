@@ -1,18 +1,23 @@
 package com.evoila.springsecuritytask.model;
 
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+
 
 @Entity
 @Table(name = "employees")
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Employee {
 
     @Id
@@ -31,13 +36,4 @@ public class Employee {
     @NotNull(message = "email can't be null")
     @Column(name = "email")
     private String email;
-
-
-    public Employee(String firstName,
-                    String lastName,
-                    String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-    }
 }

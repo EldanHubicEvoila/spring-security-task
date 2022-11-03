@@ -2,13 +2,15 @@ package com.evoila.springsecuritytask.controller;
 
 
 import com.evoila.springsecuritytask.model.Employee;
-import com.evoila.springsecuritytask.service.EmployeeService;
+import com.evoila.springsecuritytask.service.impl.JpaEmployeeService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
 import java.util.List;
 
 
@@ -17,31 +19,31 @@ import java.util.List;
 public class EmployeeController {
 
     @Autowired
-    private EmployeeService employeeService;
+    private JpaEmployeeService JPAEmployeeService;
 
 
     @GetMapping()
     public ResponseEntity<List<Employee>> getEmployees() {
-        return new ResponseEntity<>(employeeService.getEmployees(), HttpStatus.OK);
+        return new ResponseEntity<>(JPAEmployeeService.getEmployees(), HttpStatus.OK);
     }
 
     @PostMapping()
     public ResponseEntity<Employee> createEmployee(@Valid @RequestBody Employee employee) {
-        return new ResponseEntity<>(employeeService.createEmployee(employee), HttpStatus.CREATED);
+        return new ResponseEntity<>(JPAEmployeeService.createEmployee(employee), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
-        return new ResponseEntity<>(employeeService.getEmployeeById(id), HttpStatus.OK);
+        return new ResponseEntity<>(JPAEmployeeService.getEmployeeById(id), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployee(@PathVariable Long id,@Valid @RequestBody Employee employeeDetails) {
-        return new ResponseEntity<>(employeeService.updateEmployee(id, employeeDetails), HttpStatus.OK);
+        return new ResponseEntity<>(JPAEmployeeService.updateEmployee(id, employeeDetails), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteEmployee(@PathVariable Long id){
-        return new ResponseEntity<>(employeeService.deleteEmployee(id));
+        return new ResponseEntity<>(JPAEmployeeService.deleteEmployee(id));
     }
 }
