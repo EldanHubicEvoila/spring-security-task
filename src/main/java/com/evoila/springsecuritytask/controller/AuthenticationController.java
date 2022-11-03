@@ -3,7 +3,7 @@ package com.evoila.springsecuritytask.controller;
 
 import com.evoila.springsecuritytask.model.AuthenticationRequest;
 import com.evoila.springsecuritytask.model.AuthenticationResponse;
-import com.evoila.springsecuritytask.service.impl.JWTAuthenticationService;
+import com.evoila.springsecuritytask.service.AuthenticationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,11 +22,11 @@ import javax.validation.Valid;
 @RequestMapping("/auth")
 public class AuthenticationController {
 
-    private final JWTAuthenticationService JWTAuthenticationService;
+    private final AuthenticationService authenticationService;
 
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest request) {
-        return new ResponseEntity<>(JWTAuthenticationService.login(request), HttpStatus.OK);
+        return new ResponseEntity<>(authenticationService.login(request), HttpStatus.OK);
     }
 }
