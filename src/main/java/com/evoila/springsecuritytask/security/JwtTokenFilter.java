@@ -1,6 +1,6 @@
 package com.evoila.springsecuritytask.security;
 
-import com.evoila.springsecuritytask.model.AuthUser;
+import com.evoila.springsecuritytask.model.AuthenticationUser;
 import com.evoila.springsecuritytask.model.User;
 import com.evoila.springsecuritytask.util.JwtTokenUtil;
 import lombok.NonNull;
@@ -72,13 +72,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private UserDetails getUserDetails(String token) {
         User userDetails = new User();
-        AuthUser authUser = new AuthUser(userDetails);
+        AuthenticationUser authenticationUser = new AuthenticationUser(userDetails);
         String[] jwtSubject = jwtUtil.getSubject(token).split(",");
 
-        authUser.getUser().setId(Long.parseLong(jwtSubject[0]));
-        authUser.getUser().setUsername(jwtSubject[1]);
-        authUser.getUser().setEmail((jwtSubject[2]));
+        authenticationUser.getUser().setId(Long.parseLong(jwtSubject[0]));
+        authenticationUser.getUser().setUsername(jwtSubject[1]);
+        authenticationUser.getUser().setEmail((jwtSubject[2]));
 
-        return authUser;
+        return authenticationUser;
     }
 }

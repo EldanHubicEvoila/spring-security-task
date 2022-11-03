@@ -3,7 +3,9 @@ package com.evoila.springsecuritytask.controller;
 
 import com.evoila.springsecuritytask.model.Employee;
 import com.evoila.springsecuritytask.service.EmployeeService;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +15,11 @@ import java.util.List;
 
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/employees")
 public class EmployeeController {
 
-    @Autowired
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
 
     @GetMapping()
@@ -36,12 +38,12 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id,@Valid @RequestBody Employee employeeDetails) {
+    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @Valid @RequestBody Employee employeeDetails) {
         return new ResponseEntity<>(employeeService.updateEmployee(id, employeeDetails), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteEmployee(@PathVariable Long id){
-        return new ResponseEntity<>(employeeService.deleteEmployee(id));
+    public ResponseEntity<Boolean> deleteEmployee(@PathVariable Long id) {
+        return new ResponseEntity<>(employeeService.deleteEmployee(id), HttpStatus.OK);
     }
 }

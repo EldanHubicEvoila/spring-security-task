@@ -1,13 +1,15 @@
 package com.evoila.springsecuritytask.model;
 
+
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 
+
 @Getter
 @Setter
-public class AuthRequest {
+public class AuthenticationRequest {
 
     @NotNull(message = "username can't be null")
     private String username;

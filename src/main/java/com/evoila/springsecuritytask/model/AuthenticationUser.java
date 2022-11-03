@@ -1,22 +1,22 @@
 package com.evoila.springsecuritytask.model;
 
+
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+
 @Getter
 @Setter
-public class AuthUser implements UserDetails {
+@RequiredArgsConstructor
+public class AuthenticationUser implements UserDetails {
 
     private final User user;
-
-
-    public AuthUser(User user) {
-        this.user = user;
-    }
 
 
     @Override

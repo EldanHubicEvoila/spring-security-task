@@ -1,9 +1,12 @@
 package com.evoila.springsecuritytask.controller;
 
-import com.evoila.springsecuritytask.model.AuthRequest;
-import com.evoila.springsecuritytask.model.AuthResponse;
+
+import com.evoila.springsecuritytask.model.AuthenticationRequest;
+import com.evoila.springsecuritytask.model.AuthenticationResponse;
 import com.evoila.springsecuritytask.service.AuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,16 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthenticationController {
 
-    @Autowired
-    AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
 
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthRequest request) {
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest request) {
         return new ResponseEntity<>(authenticationService.login(request), HttpStatus.OK);
     }
 }
