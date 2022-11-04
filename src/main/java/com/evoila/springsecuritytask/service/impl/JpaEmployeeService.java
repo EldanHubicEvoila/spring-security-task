@@ -27,13 +27,13 @@ public class JpaEmployeeService implements EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Employee createEmployee(@Valid @RequestBody Employee employee) {
-        return employeeRepository.save(employee);
-    }
-
     public Employee getEmployeeById(@PathVariable Long id) {
         return employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + " doesn't exist"));
+    }
+
+    public Employee createEmployee(@Valid @RequestBody Employee employee) {
+        return employeeRepository.save(employee);
     }
 
     public Employee updateEmployee(@PathVariable Long id, @Valid @RequestBody Employee employeeDetails) {

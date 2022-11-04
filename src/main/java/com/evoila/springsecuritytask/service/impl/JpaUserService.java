@@ -19,7 +19,7 @@ public class JpaUserService implements UserService {
     private final UserRepository userRepository;
 
 
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         return new AuthenticationUser(userRepository.findByUsername(username)
                 .orElseThrow(
                         () -> new UsernameNotFoundException("User " + username + " not found")));
