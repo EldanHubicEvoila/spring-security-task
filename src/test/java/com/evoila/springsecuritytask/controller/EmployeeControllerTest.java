@@ -1,10 +1,13 @@
 package com.evoila.springsecuritytask.controller;
 
+
 import com.evoila.springsecuritytask.exception.ResourceNotFoundException;
 import com.evoila.springsecuritytask.model.Employee;
 import com.evoila.springsecuritytask.service.EmployeeService;
 import com.evoila.springsecuritytask.util.JsonUtil;
+
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,11 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,8 +45,6 @@ class EmployeeControllerTest {
     @Test
     @WithMockUser
     void getEmployees_shouldReturnAllEmployees_200() throws Exception {
-
-
         List<Employee> testEmployees = new ArrayList<>(List.of(
                 testEmployee));
 
@@ -66,7 +68,6 @@ class EmployeeControllerTest {
         testEmployee.setLastName("testLastName");
         testEmployee.setEmail("testEmail@email.com");
 
-
         when(employeeService.createEmployee(any(Employee.class)))
                 .thenReturn(testEmployee);
 
@@ -81,18 +82,53 @@ class EmployeeControllerTest {
 
     @Test
     @WithMockUser
+    void createEmployee_whenFieldNull_shouldReturnBadRequest_400() throws Exception {
+        Employee testEmployee = new Employee();
+        testEmployee.setFirstName(null);
+        testEmployee.setLastName("testLastName");
+        testEmployee.setEmail("testEmail@email.com");
+
+        when(employeeService.createEmployee(testEmployee)).thenReturn(testEmployee);
+
+        mockMvc.perform(post("/api/v1/employees").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(testEmployee)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser
+    void createEmployee_whenBadEmailFormat_shouldReturnBadRequest_400() throws Exception {
+        Employee testEmployee = new Employee();
+        testEmployee.setFirstName("testFirstName");
+        testEmployee.setLastName("testLastName");
+        testEmployee.setEmail("badEmailFormat");
+
+        when(employeeService.createEmployee(testEmployee)).thenReturn(testEmployee);
+
+        mockMvc.perform(post("/api/v1/employees").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(testEmployee)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser
     void getEmployeeById_whenEmployeeExists_shouldGetEmployeeById_200() throws Exception {
         when(employeeService.getEmployeeById(testEmployee.getId()))
                 .thenReturn(testEmployee);
 
         mockMvc.perform(get("/api/v1/employees/{id}", testEmployee.getId()).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value(testEmployee.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(testEmployee.getLastName()))
+                .andExpect(jsonPath("$.email").value(testEmployee.getEmail()));
     }
 
     @Test
     @WithMockUser
-    public void getEmployeeById_whenEmployeeDoesNotExists_shouldThrowResourceNotFoundException_404() throws Exception {
+    void getEmployeeById_whenEmployeeDoesNotExists_shouldThrowResourceNotFoundException_404() throws Exception {
         when(employeeService.getEmployeeById(testEmployee.getId()))
                 .thenThrow(new ResourceNotFoundException("Employee with id: " + 1 + " doesn't exist"));
 
@@ -113,12 +149,40 @@ class EmployeeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value(testEmployee.getFirstName()))
                 .andExpect(jsonPath("$.lastName").value(testEmployee.getLastName()))
-                .andExpect(jsonPath("$.email").value(testEmployee.getEmail()));;
+                .andExpect(jsonPath("$.email").value(testEmployee.getEmail()));
     }
 
     @Test
     @WithMockUser
-    public void updateEmployee_whenEmployeeDoesNotExists_shouldThrowResourceNotFoundException_404() throws Exception {
+    void updateEmployee_whenFieldNull_shouldReturnBadRequest_400() throws Exception {
+        testEmployee.setEmail(null);
+
+        when(employeeService.updateEmployee(testEmployee.getId(), testEmployee))
+                .thenReturn(testEmployee);
+
+        mockMvc.perform(put("/api/v1/employees/{id}", testEmployee.getId()).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(testEmployee)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser
+    void updateEmployee_whenBadEmailFormat_shouldReturnBadRequest_400() throws Exception {
+        testEmployee.setEmail("badEmailFormat");
+
+        when(employeeService.updateEmployee(testEmployee.getId(), testEmployee))
+                .thenReturn(testEmployee);
+
+        mockMvc.perform(put("/api/v1/employees/{id}", testEmployee.getId()).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(testEmployee)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser
+    void updateEmployee_whenEmployeeDoesNotExists_shouldThrowResourceNotFoundException_404() throws Exception {
         when(employeeService.updateEmployee(testEmployee.getId(), testEmployee))
                 .thenThrow(new ResourceNotFoundException("Employee with id: " + testEmployee.getId() + " doesn't exist"));
 
@@ -141,7 +205,7 @@ class EmployeeControllerTest {
 
     @Test
     @WithMockUser
-    public void deleteEmployee_whenEmployeeDoesNotExists_shouldThrowResourceNotFoundException_404() throws Exception {
+    void deleteEmployee_whenEmployeeDoesNotExists_shouldThrowResourceNotFoundException_404() throws Exception {
         when(employeeService.deleteEmployee(testEmployee.getId()))
                 .thenThrow(new ResourceNotFoundException("Employee with id: " + 1 + " doesn't exist"));
 
@@ -149,5 +213,4 @@ class EmployeeControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
-
 }
