@@ -78,7 +78,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
         ErrorResponse errorResponse = ErrorResponse
                 .builder()
-                .statusCode(HttpStatus.NOT_FOUND.value())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .timeStamp(new Date())
                 .message(ex.getMessage())
                 .description(request.getDescription(false))

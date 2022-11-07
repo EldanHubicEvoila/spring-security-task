@@ -24,12 +24,14 @@ public class EmployeeController {
 
     @GetMapping()
     public ResponseEntity<List<Employee>> getEmployees() {
-        return new ResponseEntity<>(employeeService.getEmployees(), HttpStatus.OK);
+        List<Employee> employees = employeeService.getEmployees();
+        return new ResponseEntity<>(employees, HttpStatus.OK);
     }
 
     @PostMapping()
     public ResponseEntity<Employee> createEmployee(@Valid @RequestBody Employee employee) {
-        return new ResponseEntity<>(employeeService.createEmployee(employee), HttpStatus.CREATED);
+        Employee employee1 = employeeService.createEmployee(employee);
+        return new ResponseEntity<>(employee1, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
