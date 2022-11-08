@@ -19,11 +19,11 @@ public class SpringSecurityTaskApplication {
 	}
 
 
-	@Bean
-	CommandLineRunner commandLineRunner(UserRepository users, PasswordEncoder encoder) {
-			return args -> {
-				if(users.count() == 0)
-					users.save(new User("user", "user@email.com", encoder.encode("user123")));
-			};
-	}
+//	@Bean
+//	CommandLineRunner commandLineRunner(UserRepository users, PasswordEncoder encoder) {
+//			return args -> {
+//				if(users.count() == 0)
+//					users.save(new User("user", "user@email.com", encoder.encode("user123")));
+//			};
+//	}
 }

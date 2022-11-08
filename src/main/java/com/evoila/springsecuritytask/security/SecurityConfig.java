@@ -1,5 +1,6 @@
 package com.evoila.springsecuritytask.security;
 
+import com.evoila.springsecuritytask.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -23,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtTokenFilter jwtTokenFilter;
+    private final JwtTokenUtil jwtTokenUtil;
 
 
     @Bean
@@ -44,7 +45,7 @@ public class SecurityConfig {
                                 }
                         ));
 
-        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtTokenFilter(jwtTokenUtil), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

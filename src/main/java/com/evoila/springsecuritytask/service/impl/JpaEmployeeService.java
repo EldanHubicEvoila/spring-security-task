@@ -9,10 +9,7 @@ import com.evoila.springsecuritytask.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.validation.Valid;
 import java.util.List;
 
 
@@ -27,16 +24,16 @@ public class JpaEmployeeService implements EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Employee getEmployeeById(@PathVariable Long id) {
+    public Employee getEmployeeById(Long id) {
         return employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + " doesn't exist"));
     }
 
-    public Employee createEmployee(@Valid @RequestBody Employee employee) {
+    public Employee createEmployee(Employee employee) {
         return employeeRepository.save(employee);
     }
 
-    public Employee updateEmployee(@PathVariable Long id, @Valid @RequestBody Employee employeeDetails) {
+    public Employee updateEmployee(Long id, Employee employeeDetails) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + " doesn't exist"));
 
@@ -47,7 +44,7 @@ public class JpaEmployeeService implements EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public boolean deleteEmployee(@PathVariable Long id) {
+    public boolean deleteEmployee(Long id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + id + " doesn't exist"));
 

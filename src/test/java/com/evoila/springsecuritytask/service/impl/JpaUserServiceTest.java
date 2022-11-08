@@ -31,7 +31,7 @@ class JpaUserServiceTest {
     @InjectMocks
     private JpaUserService jpaUserService;
 
-    private AuthenticationUser testUser = new AuthenticationUser(new User(
+    private final AuthenticationUser testUser = new AuthenticationUser(new User(
             "testUsername",
             "testpasword123",
             "testemail@email.com"));
@@ -39,7 +39,8 @@ class JpaUserServiceTest {
 
     @Test
     void loadUserByUsername_whenGivenUsername_shouldReturnUser_ifUserExists() {
-        Mockito.when(userRepository.findByUsername(testUser.getUsername())).thenReturn(Optional.of(testUser.getUser()));
+        Mockito.when(userRepository.findByUsername(testUser.getUsername()))
+                .thenReturn(Optional.of(testUser.getUser()));
 
         UserDetails expectedUser = jpaUserService.loadUserByUsername("testUsername");
 
@@ -49,7 +50,8 @@ class JpaUserServiceTest {
 
     @Test
     void loadUserByUsername_whenGivenUsername_shouldThrowUsernameNotFoundException_ifUserDoesNotExists() {
-        Mockito.when(userRepository.findByUsername("testUsername")).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findByUsername("testUsername"))
+                .thenReturn(Optional.empty());
 
         assertThrows(UsernameNotFoundException.class, () -> jpaUserService.loadUserByUsername("testUsername"));
     }

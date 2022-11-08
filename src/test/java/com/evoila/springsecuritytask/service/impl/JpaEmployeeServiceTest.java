@@ -42,7 +42,8 @@ class JpaEmployeeServiceTest {
     void getEmployees_shouldReturnAllEmployees() {
         List<Employee> employees = new ArrayList<>(Arrays.asList(testEmployee1, testEmployee2, testEmployee3));
 
-        Mockito.when(employeeRepository.findAll()).thenReturn(employees);
+        Mockito.when(employeeRepository.findAll())
+                .thenReturn(employees);
 
         List<Employee> expectedEmployeesList = jpaEmployeeService.getEmployees();
 
@@ -53,7 +54,8 @@ class JpaEmployeeServiceTest {
 
     @Test
     void getEmployeeById_whenGivenEmployeeId_shouldReturnEmployeeById_ifEmployeeExists() {
-        Mockito.when(employeeRepository.findById(testEmployee1.getId())).thenReturn(Optional.of(testEmployee1));
+        Mockito.when(employeeRepository.findById(testEmployee1.getId()))
+                .thenReturn(Optional.of(testEmployee1));
 
         Employee expectedEmployee = jpaEmployeeService.getEmployeeById(1L);
 
@@ -63,14 +65,16 @@ class JpaEmployeeServiceTest {
 
     @Test
     void getEmployeeById_whenGivenEmployeeId_shouldThrowResourceNotFoundException_ifEmployeeDoesNotExist() {
-        Mockito.when(employeeRepository.findById(25L)).thenReturn(Optional.empty());
+        Mockito.when(employeeRepository.findById(25L))
+                .thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> jpaEmployeeService.getEmployeeById(25L));
     }
 
     @Test
     void createEmployee_whenGivenEmployee_shouldCreateAndReturnGivenEmployee() {
-        Mockito.when(employeeRepository.save(testEmployee1)).thenReturn(testEmployee1);
+        Mockito.when(employeeRepository.save(testEmployee1))
+                .thenReturn(testEmployee1);
 
         Employee createdEmployee = jpaEmployeeService.createEmployee(testEmployee1);
 
@@ -85,7 +89,8 @@ class JpaEmployeeServiceTest {
         newEmployee.setLastName("newLastName");
         newEmployee.setEmail("newemail@email.com");
 
-        Mockito.when(employeeRepository.findById(testEmployee1.getId())).thenReturn(Optional.of(testEmployee1));
+        Mockito.when(employeeRepository.findById(testEmployee1.getId()))
+                .thenReturn(Optional.of(testEmployee1));
 
         jpaEmployeeService.updateEmployee(1L, newEmployee);
 
@@ -100,14 +105,16 @@ class JpaEmployeeServiceTest {
         newEmployee.setLastName("newLastName");
         newEmployee.setEmail("newemail@email.com");
 
-        Mockito.when(employeeRepository.findById(25L)).thenReturn(Optional.empty());
+        Mockito.when(employeeRepository.findById(25L))
+                .thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> jpaEmployeeService.updateEmployee(25L, newEmployee));
     }
 
     @Test
      void deleteEmployee_whenGivenEmployeeId_shouldDeleteEmployee_ifEmployeeExists(){
-        Mockito.when(employeeRepository.findById(testEmployee1.getId())).thenReturn(Optional.of(testEmployee1));
+        Mockito.when(employeeRepository.findById(testEmployee1.getId()))
+                .thenReturn(Optional.of(testEmployee1));
 
         boolean isEmployeeDeleted = jpaEmployeeService.deleteEmployee(testEmployee1.getId());
 
@@ -117,7 +124,8 @@ class JpaEmployeeServiceTest {
 
     @Test
     void deleteEmployee_whenGivenEmployeeId_shouldThrowResourceNotFoundException_ifEmployeeDoesNotExist() {
-        Mockito.when(employeeRepository.findById(25L)).thenReturn(Optional.empty());
+        Mockito.when(employeeRepository.findById(25L))
+                .thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> jpaEmployeeService.deleteEmployee(25L));
     }
