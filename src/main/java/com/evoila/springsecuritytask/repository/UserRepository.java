@@ -1,5 +1,6 @@
 package com.evoila.springsecuritytask.repository;
 
+
 import com.evoila.springsecuritytask.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
