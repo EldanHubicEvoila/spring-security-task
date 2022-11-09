@@ -29,7 +29,7 @@ public class EmployeeController {
 
     @PostMapping()
     public ResponseEntity<Employee> createEmployee(@Valid @RequestBody Employee employee) {
-        return new ResponseEntity<>(employee, HttpStatus.CREATED);
+        return new ResponseEntity<>(employeeService.createEmployee(employee), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

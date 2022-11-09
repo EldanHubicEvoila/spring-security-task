@@ -80,6 +80,7 @@ class EmployeeControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(testEmployee)))
                         .andExpect(status().isCreated())
+                        .andExpect(jsonPath("$.id").value(testEmployee.getId()))
                         .andExpect(jsonPath("$.firstName").value(testEmployee.getFirstName()))
                         .andExpect(jsonPath("$.lastName").value(testEmployee.getLastName()))
                         .andExpect(jsonPath("$.email").value(testEmployee.getEmail()));
