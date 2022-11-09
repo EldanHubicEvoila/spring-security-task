@@ -1,6 +1,7 @@
 package com.evoila.springsecuritytask.controller;
 
 
+import com.evoila.springsecuritytask.config.SecurityConfigTest;
 import com.evoila.springsecuritytask.exception.ResourceNotFoundException;
 import com.evoila.springsecuritytask.model.Employee;
 import com.evoila.springsecuritytask.service.EmployeeService;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -20,19 +22,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
+
 @WebMvcTest(EmployeeController.class)
-class EmployeeControllerTest {
+class EmployeeControllerTest extends SecurityConfigTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -56,11 +58,19 @@ class EmployeeControllerTest {
 
         mockMvc.perform(get("/api/v1/employees")
                         .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$", hasSize(1)))
-                        .andExpect(jsonPath("$[0].firstName").value(testEmployee.getFirstName()))
-                        .andExpect(jsonPath("$[0].lastName").value(testEmployee.getLastName()))
-                        .andExpect(jsonPath("$[0].email").value(testEmployee.getEmail()));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].firstName").value(testEmployee.getFirstName()))
+                .andExpect(jsonPath("$[0].lastName").value(testEmployee.getLastName()))
+                .andExpect(jsonPath("$[0].email").value(testEmployee.getEmail())).andDo(print());
+    }
+
+    @Test
+    @DisplayName("getEmployees()_unauthenticatedUser_401")
+    void getEmployees_whenUnauthenticated_shouldReturnUnauthorized_401() throws Exception {
+        mockMvc.perform(get("/api/v1/employees")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -76,14 +86,13 @@ class EmployeeControllerTest {
                 .thenReturn(testEmployee);
 
         mockMvc.perform(post("/api/v1/employees")
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(testEmployee)))
-                        .andExpect(status().isCreated())
-                        .andExpect(jsonPath("$.id").value(testEmployee.getId()))
-                        .andExpect(jsonPath("$.firstName").value(testEmployee.getFirstName()))
-                        .andExpect(jsonPath("$.lastName").value(testEmployee.getLastName()))
-                        .andExpect(jsonPath("$.email").value(testEmployee.getEmail()));
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.firstName").value(testEmployee.getFirstName()))
+                .andExpect(jsonPath("$.firstName").value(testEmployee.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(testEmployee.getLastName()))
+                .andExpect(jsonPath("$.email").value(testEmployee.getEmail()));
     }
 
     @Test
@@ -98,10 +107,9 @@ class EmployeeControllerTest {
         when(employeeService.createEmployee(any(Employee.class))).thenReturn(testEmployee);
 
         mockMvc.perform(post("/api/v1/employees")
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(testEmployee)))
-                        .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -116,10 +124,18 @@ class EmployeeControllerTest {
         when(employeeService.createEmployee(any(Employee.class))).thenReturn(testEmployee);
 
         mockMvc.perform(post("/api/v1/employees")
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(testEmployee)))
-                        .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("createEmployee(Employee employee)_unauthenticatedUser_401")
+    void createEmployee_whenUnauthenticated_shouldReturnUnauthorized_401() throws Exception {
+        mockMvc.perform(post("/api/v1/employees")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(testEmployee)))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -130,12 +146,11 @@ class EmployeeControllerTest {
                 .thenReturn(testEmployee);
 
         mockMvc.perform(get("/api/v1/employees/{id}", testEmployee.getId())
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.firstName").value(testEmployee.getFirstName()))
-                        .andExpect(jsonPath("$.lastName").value(testEmployee.getLastName()))
-                        .andExpect(jsonPath("$.email").value(testEmployee.getEmail()));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value(testEmployee.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(testEmployee.getLastName()))
+                .andExpect(jsonPath("$.email").value(testEmployee.getEmail()));
     }
 
     @Test
@@ -146,9 +161,16 @@ class EmployeeControllerTest {
                 .thenThrow(new ResourceNotFoundException("Employee with id: " + 1 + " doesn't exist"));
 
         mockMvc.perform(get("/api/v1/employees/{id}", 1)
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("getEmployeeById(Long id)_unauthenticatedUser_401")
+    void getEmployeeById_whenUnauthenticated_shouldReturnUnauthorized_401() throws Exception {
+        mockMvc.perform(get("/api/v1/employees/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -159,13 +181,12 @@ class EmployeeControllerTest {
                 .thenReturn(testEmployee);
 
         mockMvc.perform(put("/api/v1/employees/{id}", testEmployee.getId())
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(testEmployee)))
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.firstName").value(testEmployee.getFirstName()))
-                        .andExpect(jsonPath("$.lastName").value(testEmployee.getLastName()))
-                        .andExpect(jsonPath("$.email").value(testEmployee.getEmail()));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value(testEmployee.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(testEmployee.getLastName()))
+                .andExpect(jsonPath("$.email").value(testEmployee.getEmail()));
     }
 
     @Test
@@ -178,10 +199,9 @@ class EmployeeControllerTest {
                 .thenReturn(testEmployee);
 
         mockMvc.perform(put("/api/v1/employees/{id}", testEmployee.getId())
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(testEmployee)))
-                        .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -194,10 +214,9 @@ class EmployeeControllerTest {
                 .thenReturn(testEmployee);
 
         mockMvc.perform(put("/api/v1/employees/{id}", testEmployee.getId())
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(testEmployee)))
-                        .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -208,10 +227,18 @@ class EmployeeControllerTest {
                 .thenThrow(new ResourceNotFoundException("Employee with id: " + testEmployee.getId() + " doesn't exist"));
 
         mockMvc.perform(put("/api/v1/employees/{id}", testEmployee.getId())
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(testEmployee)))
-                        .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("updateEmployee(Long id, Employee employeeDetails)_unauthenticatedUser_401")
+    void updateEmployee_whenUnauthenticated_shouldReturnUnauthorized_401() throws Exception {
+        mockMvc.perform(put("/api/v1/employees/{id}", testEmployee.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(testEmployee)))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -222,9 +249,8 @@ class EmployeeControllerTest {
                 .thenReturn(true);
 
         mockMvc.perform(delete("/api/v1/employees/{id}", testEmployee.getId())
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -235,8 +261,15 @@ class EmployeeControllerTest {
                 .thenThrow(new ResourceNotFoundException("Employee with id: " + 1 + " doesn't exist"));
 
         mockMvc.perform(delete("/api/v1/employees/{id}", testEmployee.getId())
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("deleteEmployee(Long id)_unauthenticatedUser_401")
+    void deleteEmployee_whenUnauthenticated_shouldReturnUnauthorized_401() throws Exception {
+        mockMvc.perform(delete("/api/v1/employees/{id}", testEmployee.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
 }
