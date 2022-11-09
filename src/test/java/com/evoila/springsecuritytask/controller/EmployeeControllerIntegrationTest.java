@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -27,14 +26,13 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 
 @WebMvcTest(EmployeeController.class)
-class EmployeeControllerTest extends SecurityConfigTest {
+class EmployeeControllerIntegrationTest extends SecurityConfigTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -62,7 +60,7 @@ class EmployeeControllerTest extends SecurityConfigTest {
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].firstName").value(testEmployee.getFirstName()))
                 .andExpect(jsonPath("$[0].lastName").value(testEmployee.getLastName()))
-                .andExpect(jsonPath("$[0].email").value(testEmployee.getEmail())).andDo(print());
+                .andExpect(jsonPath("$[0].email").value(testEmployee.getEmail()));
     }
 
     @Test
@@ -87,7 +85,7 @@ class EmployeeControllerTest extends SecurityConfigTest {
 
         mockMvc.perform(post("/api/v1/employees")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(testEmployee)))
+                       )
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstName").value(testEmployee.getFirstName()))
                 .andExpect(jsonPath("$.firstName").value(testEmployee.getFirstName()))
@@ -158,7 +156,7 @@ class EmployeeControllerTest extends SecurityConfigTest {
     @DisplayName("getEmployeeById(Long id)_noEmployeeFound_404")
     void getEmployeeById_whenEmployeeDoesNotExists_shouldThrowResourceNotFoundException_404() throws Exception {
         when(employeeService.getEmployeeById(testEmployee.getId()))
-                .thenThrow(new ResourceNotFoundException("Employee with id: " + 1 + " doesn't exist"));
+                .thenThrow(ResourceNotFoundException.class);
 
         mockMvc.perform(get("/api/v1/employees/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -224,7 +222,7 @@ class EmployeeControllerTest extends SecurityConfigTest {
     @DisplayName("updateEmployee(Long id, Employee employeeDetails)_noEmployeeFound_404")
     void updateEmployee_whenEmployeeDoesNotExists_shouldThrowResourceNotFoundException_404() throws Exception {
         when(employeeService.updateEmployee(eq(testEmployee.getId()), any(Employee.class)))
-                .thenThrow(new ResourceNotFoundException("Employee with id: " + testEmployee.getId() + " doesn't exist"));
+                .thenThrow(ResourceNotFoundException.class);
 
         mockMvc.perform(put("/api/v1/employees/{id}", testEmployee.getId())
                         .contentType(MediaType.APPLICATION_JSON)
