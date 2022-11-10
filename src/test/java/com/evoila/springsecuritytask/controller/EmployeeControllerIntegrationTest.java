@@ -1,7 +1,7 @@
 package com.evoila.springsecuritytask.controller;
 
 
-import com.evoila.springsecuritytask.config.SecurityConfigTest;
+import com.evoila.springsecuritytask.security.SecurityConfigTest;
 import com.evoila.springsecuritytask.exception.ResourceNotFoundException;
 import com.evoila.springsecuritytask.model.Employee;
 import com.evoila.springsecuritytask.service.EmployeeService;

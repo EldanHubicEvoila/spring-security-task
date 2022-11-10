@@ -1,7 +1,7 @@
 package com.evoila.springsecuritytask.controller;
 
 
-import com.evoila.springsecuritytask.config.SecurityConfigTest;
+import com.evoila.springsecuritytask.security.SecurityConfigTest;
 import com.evoila.springsecuritytask.model.AuthenticationRequest;
 import com.evoila.springsecuritytask.model.AuthenticationResponse;
 import com.evoila.springsecuritytask.service.AuthenticationService;
@@ -50,7 +50,6 @@ class AuthenticationControllerIntegrationTest extends SecurityConfigTest {
                 .build();
 
         Mockito.when(authenticationService.login(any(AuthenticationRequest.class))).thenReturn(testAuthenticationResponse);
-
 
         mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -1,4 +1,4 @@
-package com.evoila.springsecuritytask.config;
+package com.evoila.springsecuritytask.security;
 
 import com.evoila.springsecuritytask.security.SecurityConfig;
 import com.evoila.springsecuritytask.util.JwtTokenUtil;
