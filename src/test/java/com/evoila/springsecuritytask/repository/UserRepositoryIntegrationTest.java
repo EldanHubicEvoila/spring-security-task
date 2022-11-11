@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
 
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
 
     @Test

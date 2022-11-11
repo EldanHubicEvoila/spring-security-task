@@ -1,38 +1,75 @@
 package com.evoila.springsecuritytask.controller;
 
 
-import com.evoila.springsecuritytask.security.AbstractSecurityConfig;
 import com.evoila.springsecuritytask.model.AuthenticationRequest;
 import com.evoila.springsecuritytask.model.AuthenticationResponse;
+
+import com.evoila.springsecuritytask.repository.UserRepository;
+import com.evoila.springsecuritytask.security.AbstractSecurityConfig;
 import com.evoila.springsecuritytask.service.AuthenticationService;
 import com.evoila.springsecuritytask.util.JsonUtil;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.Mockito;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
+
 import static org.mockito.ArgumentMatchers.any;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@WebMvcTest(AuthenticationController.class)
+@SpringBootTest
+@Testcontainers
+@AutoConfigureMockMvc
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class AuthenticationControllerIntegrationTest extends AbstractSecurityConfig {
 
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @MockBean
-    private AuthenticationService authenticationService;
+    AuthenticationService authenticationService;
+
+    @Container
+    private static final PostgreSQLContainer<?> POSTGRES_SQL_CONTAINER =
+            new PostgreSQLContainer<>(DockerImageName.parse("postgres:14.2-alpine"));
+
+
+    @DynamicPropertySource
+    static void overrideTestProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", POSTGRES_SQL_CONTAINER::getJdbcUrl);
+        registry.add("spring.datasource.username", POSTGRES_SQL_CONTAINER::getUsername);
+        registry.add("spring.datasource.password", POSTGRES_SQL_CONTAINER::getPassword);
+    }
 
 
     @Test

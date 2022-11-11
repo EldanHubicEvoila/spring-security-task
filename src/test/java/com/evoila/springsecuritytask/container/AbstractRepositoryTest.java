@@ -22,7 +22,7 @@ import org.testcontainers.utility.DockerImageName;
 public abstract class AbstractRepositoryTest {
 
     @Container
-    private static final PostgreSQLContainer<?> POSTGRES_SQL_CONTAINER =
+    static final PostgreSQLContainer<?> POSTGRES_SQL_CONTAINER =
             new PostgreSQLContainer<>(DockerImageName.parse("postgres:14.2-alpine"));;
 
 

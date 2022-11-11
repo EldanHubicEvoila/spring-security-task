@@ -30,17 +30,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-
 @WebMvcTest(EmployeeController.class)
 class EmployeeControllerIntegrationTest extends AbstractSecurityConfig {
 
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @MockBean
-    private EmployeeService employeeService;
+    EmployeeService employeeService;
 
-    private final Employee testEmployee =
+    Employee testEmployee =
             new Employee(1L, "testFirstName", "testLastName", "testemail@email.com");
 
 
