@@ -37,6 +37,4 @@ class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
 
         assertThrows(NoSuchElementException.class, expectedUser::get);
     }
-
-
 }
