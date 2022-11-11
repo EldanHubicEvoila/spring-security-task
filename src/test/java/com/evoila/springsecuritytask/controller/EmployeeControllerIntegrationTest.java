@@ -1,7 +1,7 @@
 package com.evoila.springsecuritytask.controller;
 
 
-import com.evoila.springsecuritytask.security.SecurityConfigTest;
+import com.evoila.springsecuritytask.security.AbstractSecurityConfig;
 import com.evoila.springsecuritytask.exception.ResourceNotFoundException;
 import com.evoila.springsecuritytask.model.Employee;
 import com.evoila.springsecuritytask.service.EmployeeService;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(EmployeeController.class)
-class EmployeeControllerIntegrationTest extends SecurityConfigTest {
+class EmployeeControllerIntegrationTest extends AbstractSecurityConfig {
 
     @Autowired
     private MockMvc mockMvc;
@@ -85,7 +85,7 @@ class EmployeeControllerIntegrationTest extends SecurityConfigTest {
 
         mockMvc.perform(post("/api/v1/employees")
                         .contentType(MediaType.APPLICATION_JSON)
-                       )
+                        .content(JsonUtil.toJson(testEmployee)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstName").value(testEmployee.getFirstName()))
                 .andExpect(jsonPath("$.firstName").value(testEmployee.getFirstName()))

@@ -4,6 +4,7 @@ package com.evoila.springsecuritytask.exception.handler;
 import com.evoila.springsecuritytask.exception.ResourceNotFoundException;
 import com.evoila.springsecuritytask.exception.response.ErrorResponse;
 
+import io.jsonwebtoken.MalformedJwtException;
 import lombok.NonNull;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;

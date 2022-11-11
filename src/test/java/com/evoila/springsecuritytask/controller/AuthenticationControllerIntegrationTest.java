@@ -1,7 +1,7 @@
 package com.evoila.springsecuritytask.controller;
 
 
-import com.evoila.springsecuritytask.security.SecurityConfigTest;
+import com.evoila.springsecuritytask.security.AbstractSecurityConfig;
 import com.evoila.springsecuritytask.model.AuthenticationRequest;
 import com.evoila.springsecuritytask.model.AuthenticationResponse;
 import com.evoila.springsecuritytask.service.AuthenticationService;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(AuthenticationController.class)
-class AuthenticationControllerIntegrationTest extends SecurityConfigTest {
+class AuthenticationControllerIntegrationTest extends AbstractSecurityConfig {
 
     @Autowired
     private MockMvc mockMvc;
