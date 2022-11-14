@@ -1,0 +1,144 @@
+package com.evoila.springsecuritytask.controller;
+
+
+import com.evoila.springsecuritytask.model.AuthenticationRequest;
+import com.evoila.springsecuritytask.model.AuthenticationResponse;
+
+import com.evoila.springsecuritytask.repository.UserRepository;
+import com.evoila.springsecuritytask.security.AbstractSecurityConfig;
+import com.evoila.springsecuritytask.service.AuthenticationService;
+import com.evoila.springsecuritytask.util.JsonUtil;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Test;
+
+import org.mockito.Mockito;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
+
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
+
+import static org.mockito.ArgumentMatchers.any;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
+@SpringBootTest
+@Testcontainers
+@AutoConfigureMockMvc
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+class AuthenticationControllerIntegrationTest extends AbstractSecurityConfig {
+
+    @Autowired
+    MockMvc mockMvc;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @MockBean
+    AuthenticationService authenticationService;
+
+    @Container
+    private static final PostgreSQLContainer<?> POSTGRES_SQL_CONTAINER =
+            new PostgreSQLContainer<>(DockerImageName.parse("postgres:14.2-alpine"));
+
+
+    @DynamicPropertySource
+    static void overrideTestProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", POSTGRES_SQL_CONTAINER::getJdbcUrl);
+        registry.add("spring.datasource.username", POSTGRES_SQL_CONTAINER::getUsername);
+        registry.add("spring.datasource.password", POSTGRES_SQL_CONTAINER::getPassword);
+    }
+
+
+    @Test
+    @DisplayName("login(AuthenticationRequest authenticationRequest)_validCredentials_200")
+    void login_whenValidUsernameAndPassword_returnAuthenticationResponse_200() throws Exception {
+        AuthenticationRequest testAuthenticationRequest = new AuthenticationRequest();
+        testAuthenticationRequest.setUsername("testUser");
+        testAuthenticationRequest.setPassword("testPw");
+        AuthenticationResponse testAuthenticationResponse = AuthenticationResponse.builder()
+                .username("testUser")
+                .email("testemail@email.com")
+                .accessToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" +
+                        ".eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6InRlc3RVc2VyIiwiaWF0IjoxNTE2MjM5MDIyfQ" +
+                        ".UxNJRmZD70Jv4BX2UYmJE8vQhWVn8OSJTA5McJSPce4")
+                .build();
+
+        Mockito.when(authenticationService.login(any(AuthenticationRequest.class))).thenReturn(testAuthenticationResponse);
+
+        mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(testAuthenticationRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value(testAuthenticationResponse.getUsername()))
+                .andExpect(jsonPath("$.email").value(testAuthenticationResponse.getEmail()))
+                .andExpect(jsonPath("$.accessToken").value(testAuthenticationResponse.getAccessToken()));
+    }
+
+    @Test
+    @DisplayName("login(AuthenticationRequest authenticationRequest)_invalidCredentials_401")
+    void login_whenInvalidUsernameAndPassword_throwBadCredentialsException_401() throws Exception{
+        AuthenticationRequest testAuthenticationRequest = new AuthenticationRequest();
+        testAuthenticationRequest.setUsername("testUser");
+        testAuthenticationRequest.setPassword("testPw");
+
+        Mockito.when(authenticationService.login(any(AuthenticationRequest.class))).thenThrow(BadCredentialsException.class);
+
+        mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(testAuthenticationRequest)))
+                        .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("login(AuthenticationRequest authenticationRequest)_usernameNull_400")
+    void login_whenUsernameNull_shouldReturnBadRequest_400() throws Exception{
+        AuthenticationRequest testAuthenticationRequest = new AuthenticationRequest();
+        testAuthenticationRequest.setUsername(null);
+        testAuthenticationRequest.setPassword("testPw");
+
+        Mockito.when(authenticationService.login(any(AuthenticationRequest.class))).thenReturn(null);
+
+        mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(testAuthenticationRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("login(AuthenticationRequest authenticationRequest)_passwordNull_400")
+    void login_whenPasswordNull_shouldReturnBadRequest_400() throws Exception{
+        AuthenticationRequest testAuthenticationRequest = new AuthenticationRequest();
+        testAuthenticationRequest.setUsername("testUser");
+        testAuthenticationRequest.setPassword(null);
+
+        Mockito.when(authenticationService.login(any(AuthenticationRequest.class))).thenReturn(null);
+
+        mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(testAuthenticationRequest)))
+                .andExpect(status().isBadRequest());
+    }
+}

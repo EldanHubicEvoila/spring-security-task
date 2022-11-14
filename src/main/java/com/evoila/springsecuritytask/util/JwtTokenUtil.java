@@ -39,14 +39,12 @@ public class JwtTokenUtil {
             return true;
         } catch (ExpiredJwtException ex) {
             LOGGER.error("JWT expired", ex);
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException | MalformedJwtException ex) {
             LOGGER.error("Token is null, empty or only whitespace", ex);
-        } catch (MalformedJwtException ex) {
-            LOGGER.error("JWT is invalid", ex);
         } catch (UnsupportedJwtException ex) {
             LOGGER.error("JWT is not supported", ex);
         } catch (SignatureException ex) {
-            LOGGER.error("Signature validation failed");
+            LOGGER.error("Signature validation failed", ex);
         }
 
         return false;

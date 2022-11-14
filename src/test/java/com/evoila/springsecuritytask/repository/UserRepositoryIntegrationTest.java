@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
-class UserRepositoryTest extends AbstractRepositoryTest {
+class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
 
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
 
     @Test
@@ -37,6 +37,4 @@ class UserRepositoryTest extends AbstractRepositoryTest {
 
         assertThrows(NoSuchElementException.class, expectedUser::get);
     }
-
-
 }
