@@ -1,7 +1,6 @@
 package com.evoila.springsecuritytask.controller;
 
 
-import com.evoila.springsecuritytask.security.AbstractSecurityConfig;
 import com.evoila.springsecuritytask.exception.ResourceNotFoundException;
 import com.evoila.springsecuritytask.model.Employee;
 import com.evoila.springsecuritytask.service.EmployeeService;
@@ -31,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(EmployeeController.class)
-class EmployeeControllerIntegrationTest extends AbstractSecurityConfig {
+class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTest {
 
     @Autowired
     MockMvc mockMvc;

@@ -1,5 +1,7 @@
-package com.evoila.springsecuritytask.security;
+package com.evoila.springsecuritytask.controller;
 
+
+import com.evoila.springsecuritytask.security.SecurityConfig;
 import com.evoila.springsecuritytask.util.JwtTokenUtil;
 
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -11,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
         SecurityConfig.class,
         JwtTokenUtil.class
 })
-public abstract class AbstractSecurityConfig {
+public abstract class AbstractSecureControllerTest {
 
     @MockBean
     private UserDetailsService userDetailsService;
