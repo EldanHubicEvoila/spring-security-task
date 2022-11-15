@@ -1,7 +1,9 @@
 package com.evoila.springsecuritytask.dto;
 
-import com.evoila.springsecuritytask.model.Employee;
-import lombok.*;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -11,7 +13,6 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Builder
 public class EmployeeDTO {
-
 
     private Long id;
 
@@ -24,6 +25,4 @@ public class EmployeeDTO {
     @Email(message = "Invalid email format")
     @NotNull(message = "email can't be null")
     private String email;
-
-
 }
