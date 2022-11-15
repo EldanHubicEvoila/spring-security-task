@@ -101,7 +101,7 @@
 			<artifactId>flyway-core</artifactId>
 		</dependency>
 
-    </dependencies>
+	</dependencies>
 
 	<build>
 		<plugins>
