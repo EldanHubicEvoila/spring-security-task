@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -53,13 +52,10 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
     @WithMockUser
     @DisplayName("getEmployees()_200")
     void getEmployees_shouldReturnAllEmployees_200() throws Exception {
-        List<EmployeeDTO> testEmployees = new ArrayList<>(List.of(
-                testEmployeeDTO));
+        List<Employee> expectedEmployees = new ArrayList<>(List.of(EmployeeMapper.convertToEmployee(testEmployeeDTO)));
 
         when(employeeService.getEmployees())
-                .thenReturn(testEmployees.stream()
-                                         .map(EmployeeMapper::convertToEmployee)
-                                         .collect(Collectors.toList()));
+                .thenReturn(expectedEmployees);
 
         mockMvc.perform(get("/api/v1/employees")
                         .contentType(MediaType.APPLICATION_JSON))
