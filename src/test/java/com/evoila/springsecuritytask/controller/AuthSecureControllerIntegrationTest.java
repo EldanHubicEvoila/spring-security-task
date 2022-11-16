@@ -42,7 +42,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
     @Nested
     class Login {
         @Test
-        @DisplayName("login(AuthenticationRequest authenticationRequest)_validCredentials_200")
+        @DisplayName("login()_validCredentials_200")
         void login_whenValidUsernameAndPassword_returnAuthenticationResponse_200() throws Exception {
             AuthenticationRequest testAuthenticationRequest = new AuthenticationRequest();
             testAuthenticationRequest.setUsername("testUser");
@@ -67,7 +67,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
         }
 
         @Test
-        @DisplayName("login(AuthenticationRequest authenticationRequest)_invalidCredentials_401")
+        @DisplayName("login()_invalidCredentials_401")
         void login_whenInvalidUsernameAndPassword_throwBadCredentialsException_401() throws Exception{
             AuthenticationRequest testAuthenticationRequest = new AuthenticationRequest();
             testAuthenticationRequest.setUsername("testUser");
@@ -82,7 +82,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
         }
 
         @Test
-        @DisplayName("login(AuthenticationRequest authenticationRequest)_usernameNull_400")
+        @DisplayName("login()_usernameNull_400")
         void login_whenUsernameNull_shouldReturnBadRequest_400() throws Exception{
             AuthenticationRequest testAuthenticationRequest = new AuthenticationRequest();
             testAuthenticationRequest.setUsername(null);
@@ -97,7 +97,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
         }
 
         @Test
-        @DisplayName("login(AuthenticationRequest authenticationRequest)_passwordNull_400")
+        @DisplayName("login()_passwordNull_400")
         void login_whenPasswordNull_shouldReturnBadRequest_400() throws Exception{
             AuthenticationRequest testAuthenticationRequest = new AuthenticationRequest();
             testAuthenticationRequest.setUsername("testUser");
@@ -115,7 +115,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
     @Nested
     class Register {
         @Test
-        @DisplayName("register(RegistrationRequest registrationRequest)_validRegistrationRequest_200")
+        @DisplayName("register()_validRegistrationRequest_200")
         void register_whenValidRegistrationRequest_shouldRegisterUserAndReturnRegistrationResponse() throws Exception{
             RegistrationRequest testRegistrationRequest = new RegistrationRequest();
             testRegistrationRequest.setUsername("testUser");
@@ -139,7 +139,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
         }
 
         @Test
-        @DisplayName("register(RegistrationRequest registrationRequest)_userWithUsernameAlreadyExists_409")
+        @DisplayName("register()_userWithUsernameAlreadyExists_409")
         void register_whenUserWithUsernameAlreadyExists_shouldThrowUserAlreadyExistsException() throws Exception{
             RegistrationRequest testRegistrationRequest = new RegistrationRequest();
             testRegistrationRequest.setUsername("testUser");
@@ -156,7 +156,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
         }
 
         @Test
-        @DisplayName("register(RegistrationRequest registrationRequest)_userWithEmailAlreadyExists_409")
+        @DisplayName("register()_userWithEmailAlreadyExists_409")
         void register_whenUserWithEmailAlreadyExists_shouldThrowUserAlreadyExistsException() throws Exception{
             RegistrationRequest testRegistrationRequest = new RegistrationRequest();
             testRegistrationRequest.setUsername("testUser");
@@ -173,7 +173,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
         }
 
         @Test
-        @DisplayName("register(RegistrationRequest registrationRequest)_usernameNull_400")
+        @DisplayName("register()_usernameNull_400")
         void register_whenUsernameNull_shouldReturnBadRequest_400() throws Exception{
             RegistrationRequest testRegistrationRequest = new RegistrationRequest();
             testRegistrationRequest.setUsername(null);
@@ -189,7 +189,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
         }
 
         @Test
-        @DisplayName("register(RegistrationRequest registrationRequest)_usernameEmpty_400")
+        @DisplayName("register()_usernameEmpty_400")
         void register_whenUsernameEmpty_shouldReturnBadRequest_400() throws Exception{
             RegistrationRequest testRegistrationRequest = new RegistrationRequest();
             testRegistrationRequest.setUsername("");
@@ -205,7 +205,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
         }
 
         @Test
-        @DisplayName("register(RegistrationRequest registrationRequest)_passwordNull_400")
+        @DisplayName("register()_passwordNull_400")
         void register_whenPasswordNull_shouldReturnBadRequest_400() throws Exception{
             RegistrationRequest testRegistrationRequest = new RegistrationRequest();
             testRegistrationRequest.setUsername("testUser");
@@ -221,7 +221,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
         }
 
         @Test
-        @DisplayName("register(RegistrationRequest registrationRequest)_passwordEmpty_400")
+        @DisplayName("register()_passwordEmpty_400")
         void register_whenPasswordEmpty_shouldReturnBadRequest_400() throws Exception{
             RegistrationRequest testRegistrationRequest = new RegistrationRequest();
             testRegistrationRequest.setUsername("testUser");
@@ -237,7 +237,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
         }
 
         @Test
-        @DisplayName("register(RegistrationRequest registrationRequest)_emailNull_400")
+        @DisplayName("register()_emailNull_400")
         void register_whenEmailNull_shouldReturnBadRequest_400() throws Exception{
             RegistrationRequest testRegistrationRequest = new RegistrationRequest();
             testRegistrationRequest.setUsername("testUser");
@@ -253,7 +253,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
         }
 
         @Test
-        @DisplayName("register(RegistrationRequest registrationRequest)_emailEmpty_400")
+        @DisplayName("register()_emailEmpty_400")
         void register_whenEmailEmpty_shouldReturnBadRequest_400() throws Exception{
             RegistrationRequest testRegistrationRequest = new RegistrationRequest();
             testRegistrationRequest.setUsername("testUser");
@@ -269,7 +269,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
         }
 
         @Test
-        @DisplayName("register(RegistrationRequest registrationRequest)_badEmailFormat_400")
+        @DisplayName("register()_badEmailFormat_400")
         void register_whenBadEmailFormat_shouldReturnBadRequest_400() throws Exception{
             RegistrationRequest testRegistrationRequest = new RegistrationRequest();
             testRegistrationRequest.setUsername("testUser");

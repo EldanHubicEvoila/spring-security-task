@@ -44,12 +44,14 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
             .email("testemail@email.com")
             .build();
 
+    Employee testEmployee = new Employee(1L, "testFirstName", "testLastName", "testemail@email.com");
+
 
     @Test
     @WithMockUser
     @DisplayName("getEmployees()_200")
     void getEmployees_shouldReturnAllEmployees_200() throws Exception {
-        List<Employee> expectedEmployees = new ArrayList<>(List.of(EmployeeMapper.convertToEmployee(testEmployeeDTO)));
+        List<Employee> expectedEmployees = new ArrayList<>(List.of(testEmployee));
 
         when(employeeService.getEmployees())
                 .thenReturn(expectedEmployees);
@@ -73,10 +75,10 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
 
     @Test
     @WithMockUser
-    @DisplayName("createEmployee(EmployeeDTO employeeDTO)_201")
+    @DisplayName("createEmployee()_201")
     void createEmployee_whenValidBody_shouldCreateAndReturnNewEmployee_201() throws Exception {
         when(employeeService.createEmployee(any(Employee.class)))
-                .thenReturn(EmployeeMapper.convertToEmployee(testEmployeeDTO));
+                .thenReturn(testEmployee);
 
         mockMvc.perform(post("/api/v1/employees")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -89,11 +91,11 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
 
     @Test
     @WithMockUser
-    @DisplayName("createEmployee(EmployeeDTO employeeDTO)_fieldNull_400")
+    @DisplayName("createEmployee()_fieldNull_400")
     void createEmployee_whenFieldNull_shouldReturnBadRequest_400() throws Exception {
         testEmployeeDTO.setFirstName(null);
 
-        when(employeeService.createEmployee(any(Employee.class))).thenReturn(EmployeeMapper.convertToEmployee(testEmployeeDTO));
+        when(employeeService.createEmployee(any(Employee.class))).thenReturn(testEmployee);
 
         mockMvc.perform(post("/api/v1/employees")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -103,11 +105,11 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
 
     @Test
     @WithMockUser
-    @DisplayName("createEmployee(EmployeeDTO employeeDTO)_badEmailFormat_400")
+    @DisplayName("createEmployee()_badEmailFormat_400")
     void createEmployee_whenBadEmailFormat_shouldReturnBadRequest_400() throws Exception {
         testEmployeeDTO.setEmail("badEmailFormat");
 
-        when(employeeService.createEmployee(any(Employee.class))).thenReturn(EmployeeMapper.convertToEmployee(testEmployeeDTO));
+        when(employeeService.createEmployee(any(Employee.class))).thenReturn(testEmployee);
 
         mockMvc.perform(post("/api/v1/employees")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -116,7 +118,7 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
     }
 
     @Test
-    @DisplayName("createEmployee(EmployeeDTO employeeDTO)_unauthenticatedUser_401")
+    @DisplayName("createEmployee()_unauthenticatedUser_401")
     void createEmployee_whenUnauthenticated_shouldReturnUnauthorized_401() throws Exception {
         mockMvc.perform(post("/api/v1/employees")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -126,10 +128,10 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
 
     @Test
     @WithMockUser
-    @DisplayName("getEmployeeById(Long id)_200")
+    @DisplayName("getEmployeeById()_200")
     void getEmployeeById_whenEmployeeExists_shouldGetEmployeeById_200() throws Exception {
         when(employeeService.getEmployeeById(testEmployeeDTO.getId()))
-                .thenReturn(EmployeeMapper.convertToEmployee(testEmployeeDTO));
+                .thenReturn(testEmployee);
 
         mockMvc.perform(get("/api/v1/employees/{id}", testEmployeeDTO.getId())
                         .contentType(MediaType.APPLICATION_JSON))
@@ -141,7 +143,7 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
 
     @Test
     @WithMockUser
-    @DisplayName("getEmployeeById(Long id)_noEmployeeFound_404")
+    @DisplayName("getEmployeeById()_noEmployeeFound_404")
     void getEmployeeById_whenEmployeeDoesNotExists_shouldThrowResourceNotFoundException_404() throws Exception {
         when(employeeService.getEmployeeById(testEmployeeDTO.getId()))
                 .thenThrow(ResourceNotFoundException.class);
@@ -152,7 +154,7 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
     }
 
     @Test
-    @DisplayName("getEmployeeById(Long id)_unauthenticatedUser_401")
+    @DisplayName("getEmployeeById()_unauthenticatedUser_401")
     void getEmployeeById_whenUnauthenticated_shouldReturnUnauthorized_401() throws Exception {
         mockMvc.perform(get("/api/v1/employees/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -161,10 +163,10 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
 
     @Test
     @WithMockUser
-    @DisplayName("updateEmployee(Long id, EmployeeDTO employeeDTO)_200")
+    @DisplayName("updateEmployee()_200")
     void updateEmployee_shouldUpdateExistingEmployee_200() throws Exception {
         when(employeeService.updateEmployee(eq(testEmployeeDTO.getId()), any(Employee.class)))
-                .thenReturn(EmployeeMapper.convertToEmployee(testEmployeeDTO));
+                .thenReturn(testEmployee);
 
         mockMvc.perform(put("/api/v1/employees/{id}", testEmployeeDTO.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -177,12 +179,12 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
 
     @Test
     @WithMockUser
-    @DisplayName("updateEmployee(Long id, EmployeeDTO employeeDTO)_fieldNull_400")
+    @DisplayName("updateEmployee()_fieldNull_400")
     void updateEmployee_whenFieldNull_shouldReturnBadRequest_400() throws Exception {
         testEmployeeDTO.setEmail(null);
 
         when(employeeService.updateEmployee(eq(testEmployeeDTO.getId()), any(Employee.class)))
-                .thenReturn(EmployeeMapper.convertToEmployee(testEmployeeDTO));
+                .thenReturn(testEmployee);
 
         mockMvc.perform(put("/api/v1/employees/{id}", testEmployeeDTO.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -192,12 +194,12 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
 
     @Test
     @WithMockUser
-    @DisplayName("updateEmployee(Long id, EmployeeDTO employeeDTO)_badEmailFormat_400")
+    @DisplayName("updateEmployee()_badEmailFormat_400")
     void updateEmployee_whenBadEmailFormat_shouldReturnBadRequest_400() throws Exception {
         testEmployeeDTO.setEmail("badEmailFormat");
 
         when(employeeService.updateEmployee(eq(testEmployeeDTO.getId()), any(Employee.class)))
-                .thenReturn(EmployeeMapper.convertToEmployee(testEmployeeDTO));
+                .thenReturn(testEmployee);
 
         mockMvc.perform(put("/api/v1/employees/{id}", testEmployeeDTO.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -207,7 +209,7 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
 
     @Test
     @WithMockUser
-    @DisplayName("updateEmployee(Long id, EmployeeDTO employeeDTO)_noEmployeeFound_404")
+    @DisplayName("updateEmployee()_noEmployeeFound_404")
     void updateEmployee_whenEmployeeDoesNotExists_shouldThrowResourceNotFoundException_404() throws Exception {
         when(employeeService.updateEmployee(eq(testEmployeeDTO.getId()), any(Employee.class)))
                 .thenThrow(ResourceNotFoundException.class);
@@ -219,7 +221,7 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
     }
 
     @Test
-    @DisplayName("updateEmployee(Long id, Employee employeeDetails)_unauthenticatedUser_401")
+    @DisplayName("updateEmployee()_unauthenticatedUser_401")
     void updateEmployee_whenUnauthenticated_shouldReturnUnauthorized_401() throws Exception {
         mockMvc.perform(put("/api/v1/employees/{id}", testEmployeeDTO.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -229,7 +231,7 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
 
     @Test
     @WithMockUser
-    @DisplayName("deleteEmployee(Long id)_200")
+    @DisplayName("deleteEmployee()_200")
     void deleteEmployee_shouldDeleteExistingEmployee_200() throws Exception {
         when(employeeService.deleteEmployee(testEmployeeDTO.getId()))
                 .thenReturn(true);
@@ -241,7 +243,7 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
 
     @Test
     @WithMockUser
-    @DisplayName("deleteEmployee(Long id)_noEmployeeFound_404")
+    @DisplayName("deleteEmployee()_noEmployeeFound_404")
     void deleteEmployee_whenEmployeeDoesNotExists_shouldThrowResourceNotFoundException_404() throws Exception {
         when(employeeService.deleteEmployee(testEmployeeDTO.getId()))
                 .thenThrow(new ResourceNotFoundException("Employee with id: " + 1 + " doesn't exist"));
@@ -252,7 +254,7 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
     }
 
     @Test
-    @DisplayName("deleteEmployee(Long id)_unauthenticatedUser_401")
+    @DisplayName("deleteEmployee()_unauthenticatedUser_401")
     void deleteEmployee_whenUnauthenticated_shouldReturnUnauthorized_401() throws Exception {
         mockMvc.perform(delete("/api/v1/employees/{id}", testEmployeeDTO.getId())
                         .contentType(MediaType.APPLICATION_JSON))

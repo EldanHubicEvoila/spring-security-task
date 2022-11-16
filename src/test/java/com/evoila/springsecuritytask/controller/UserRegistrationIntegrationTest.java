@@ -54,7 +54,7 @@ public class UserRegistrationIntegrationTest {
     }
 
     @Test
-    @DisplayName("register(RegistrationRequest registrationRequest)_shouldRegisterUser_200")
+    @DisplayName("register()_shouldRegisterUser_200")
     void register_whenUserWithUsernameAndEmailDoesNotExist_shouldRegisterUser_200() throws Exception{
         RegistrationRequest testRegistrationRequest = new RegistrationRequest();
         testRegistrationRequest.setUsername("testUser");
