@@ -1,4 +1,4 @@
-package com.evoila.springsecuritytask.model;
+package com.evoila.springsecuritytask.payload.response;
 
 
 import lombok.Builder;

@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authRequest -> authRequest
-                        .antMatchers("/auth/login")
+                        .antMatchers("/auth/**")
                         .permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(exceptionHandling -> exceptionHandling

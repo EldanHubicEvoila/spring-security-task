@@ -7,10 +7,8 @@ import com.evoila.springsecuritytask.exception.ResourceNotFoundException;
 import com.evoila.springsecuritytask.model.Employee;
 import com.evoila.springsecuritytask.service.EmployeeService;
 import com.evoila.springsecuritytask.util.JsonUtil;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,7 +23,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
