@@ -1,7 +1,7 @@
 package com.evoila.springsecuritytask.security;
 
 
-import com.evoila.springsecuritytask.model.AuthenticationRequest;
+import com.evoila.springsecuritytask.payload.request.AuthenticationRequest;
 import com.evoila.springsecuritytask.model.User;
 import com.evoila.springsecuritytask.repository.UserRepository;
 import com.evoila.springsecuritytask.util.JsonUtil;

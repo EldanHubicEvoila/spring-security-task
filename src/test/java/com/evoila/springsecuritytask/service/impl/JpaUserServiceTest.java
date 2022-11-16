@@ -1,7 +1,7 @@
 package com.evoila.springsecuritytask.service.impl;
 
 
-import com.evoila.springsecuritytask.model.AuthenticationUser;
+import com.evoila.springsecuritytask.model.AuthUser;
 import com.evoila.springsecuritytask.model.User;
 import com.evoila.springsecuritytask.repository.UserRepository;
 
@@ -31,7 +31,7 @@ class JpaUserServiceTest {
     @InjectMocks
     private JpaUserService jpaUserService;
 
-    private final AuthenticationUser testUser = new AuthenticationUser(new User(
+    private final AuthUser testUser = new AuthUser(new User(
             "testUsername",
             "testpasword123",
             "testemail@email.com"));

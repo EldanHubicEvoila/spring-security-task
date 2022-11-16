@@ -1,7 +1,7 @@
 package com.evoila.springsecuritytask.util;
 
 
-import com.evoila.springsecuritytask.model.AuthenticationUser;
+import com.evoila.springsecuritytask.model.AuthUser;
 
 import io.jsonwebtoken.*;
 
@@ -23,9 +23,9 @@ public class JwtTokenUtil {
     private String SECRET_KEY;
 
 
-    public String generateAccessToken(AuthenticationUser authenticationUser) {
+    public String generateAccessToken(AuthUser authUser) {
         return Jwts.builder()
-                .setSubject(String.format("%s,%s,%s", authenticationUser.getUser().getId(), authenticationUser.getUser().getUsername(), authenticationUser.getUser().getEmail()))
+                .setSubject(String.format("%s,%s,%s", authUser.getUser().getId(), authUser.getUser().getUsername(), authUser.getUser().getEmail()))
                 .setIssuer("EldanHubic")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DURATION))

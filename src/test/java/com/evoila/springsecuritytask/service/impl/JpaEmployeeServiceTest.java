@@ -51,7 +51,6 @@ class JpaEmployeeServiceTest {
         Mockito.verify(employeeRepository).findAll();
     }
 
-
     @Test
     void getEmployeeById_whenGivenEmployeeId_shouldReturnEmployeeById_ifEmployeeExists() {
         Mockito.when(employeeRepository.findById(testEmployee1.getId()))

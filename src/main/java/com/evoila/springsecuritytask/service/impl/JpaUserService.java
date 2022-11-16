@@ -1,7 +1,7 @@
 package com.evoila.springsecuritytask.service.impl;
 
 
-import com.evoila.springsecuritytask.model.AuthenticationUser;
+import com.evoila.springsecuritytask.model.AuthUser;
 import com.evoila.springsecuritytask.repository.UserRepository;
 import com.evoila.springsecuritytask.service.UserService;
 
@@ -20,7 +20,7 @@ public class JpaUserService implements UserService {
 
 
     public UserDetails loadUserByUsername(String username) {
-        return new AuthenticationUser(userRepository.findByUsername(username)
+        return new AuthUser(userRepository.findByUsername(username)
                 .orElseThrow(
                         () -> new UsernameNotFoundException("User " + username + " not found")));
     }

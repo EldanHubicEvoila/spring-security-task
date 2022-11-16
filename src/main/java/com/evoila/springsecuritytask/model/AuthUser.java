@@ -14,7 +14,7 @@ import java.util.Collection;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class AuthenticationUser implements UserDetails {
+public class AuthUser implements UserDetails {
 
     private final User user;
 

@@ -1,9 +1,9 @@
 package com.evoila.springsecuritytask.service.impl;
 
 
-import com.evoila.springsecuritytask.model.AuthenticationRequest;
-import com.evoila.springsecuritytask.model.AuthenticationResponse;
-import com.evoila.springsecuritytask.model.AuthenticationUser;
+import com.evoila.springsecuritytask.model.AuthUser;
+import com.evoila.springsecuritytask.payload.request.AuthenticationRequest;
+import com.evoila.springsecuritytask.payload.response.AuthenticationResponse;
 import com.evoila.springsecuritytask.service.AuthenticationService;
 import com.evoila.springsecuritytask.util.JwtTokenUtil;
 
@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-
 import org.springframework.stereotype.Service;
 
 
@@ -20,8 +19,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class JwtAuthenticationService implements AuthenticationService {
 
-    private final AuthenticationManager authManager;
     private final JwtTokenUtil jwtUtil;
+
+    private final AuthenticationManager authManager;
 
 
     public AuthenticationResponse login(AuthenticationRequest request) {
@@ -30,13 +30,13 @@ public class JwtAuthenticationService implements AuthenticationService {
                         request.getUsername(), request.getPassword())
         );
 
-        AuthenticationUser authenticationUser = (AuthenticationUser) authentication.getPrincipal();
-        String accessToken = jwtUtil.generateAccessToken(authenticationUser);
+        AuthUser authUser = (AuthUser) authentication.getPrincipal();
+        String accessToken = jwtUtil.generateAccessToken(authUser);
 
         return AuthenticationResponse
                 .builder()
-                .username(authenticationUser.getUsername())
-                .email(authenticationUser.getUser().getEmail())
+                .username(authUser.getUsername())
+                .email(authUser.getUser().getEmail())
                 .accessToken(accessToken)
                 .build();
     }

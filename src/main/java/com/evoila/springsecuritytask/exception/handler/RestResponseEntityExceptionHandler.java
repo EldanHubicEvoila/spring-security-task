@@ -2,6 +2,7 @@ package com.evoila.springsecuritytask.exception.handler;
 
 
 import com.evoila.springsecuritytask.exception.ResourceNotFoundException;
+import com.evoila.springsecuritytask.exception.UserAlreadyExistsException;
 import com.evoila.springsecuritytask.exception.response.ErrorResponse;
 
 import io.jsonwebtoken.MalformedJwtException;
@@ -50,6 +51,19 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 .build();
 
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> userAlreadyExistsException(Exception ex, WebRequest request) {
+        ErrorResponse errorResponse = ErrorResponse
+                .builder()
+                .statusCode(HttpStatus.CONFLICT.value())
+                .timeStamp(new Date())
+                .message(ex.getMessage())
+                .description(request.getDescription(false))
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(Exception.class)

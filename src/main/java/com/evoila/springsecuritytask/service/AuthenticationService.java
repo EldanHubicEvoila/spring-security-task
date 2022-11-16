@@ -1,7 +1,8 @@
 package com.evoila.springsecuritytask.service;
 
-import com.evoila.springsecuritytask.model.AuthenticationRequest;
-import com.evoila.springsecuritytask.model.AuthenticationResponse;
+
+import com.evoila.springsecuritytask.payload.request.AuthenticationRequest;
+import com.evoila.springsecuritytask.payload.response.AuthenticationResponse;
 
 
 public interface AuthenticationService {
