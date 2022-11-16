@@ -1,7 +1,6 @@
 package com.evoila.springsecuritytask.controller;
 
 import com.evoila.springsecuritytask.payload.request.RegistrationRequest;
-import com.evoila.springsecuritytask.repository.UserRepository;
 import com.evoila.springsecuritytask.service.RegistrationService;
 import com.evoila.springsecuritytask.util.JsonUtil;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class RegistrationIntegrationTest {
+public class UserRegistrationIntegrationTest {
 
     @Autowired
     MockMvc mockMvc;
