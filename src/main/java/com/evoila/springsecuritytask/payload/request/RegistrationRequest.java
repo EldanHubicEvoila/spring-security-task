@@ -25,4 +25,8 @@ public class RegistrationRequest {
     @NotEmpty(message = "email can't be empty")
     @Email(message = "Invalid email format")
     private String email;
+
+    @NotNull(message = "role can't be null")
+    @NotEmpty(message = "role can't be empty")
+    private String role;
 }

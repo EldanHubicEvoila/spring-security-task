@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,6 +27,7 @@ public class EmployeeController {
 
 
     @GetMapping()
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<EmployeeDTO>> getEmployees() {
         return new ResponseEntity<>(employeeService.getEmployees()
                 .stream()
@@ -34,6 +36,7 @@ public class EmployeeController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EmployeeDTO> createEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
         Employee employee = EmployeeMapper.convertToEmployee(employeeDTO);
         EmployeeDTO createdEmployee = EmployeeMapper.convertToEmployeeDTO(employeeService.createEmployee(employee));
@@ -42,11 +45,13 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id) {
         return new ResponseEntity<>(EmployeeMapper.convertToEmployeeDTO(employeeService.getEmployeeById(id)), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable Long id, @Valid @RequestBody EmployeeDTO employeeDTO) {
         Employee employeeDetails = EmployeeMapper.convertToEmployee(employeeDTO);
         EmployeeDTO updatedEmployee = EmployeeMapper.convertToEmployeeDTO(employeeService.updateEmployee(id, employeeDetails));
@@ -55,6 +60,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Boolean> deleteEmployee(@PathVariable Long id) {
         return new ResponseEntity<>(employeeService.deleteEmployee(id), HttpStatus.OK);
     }

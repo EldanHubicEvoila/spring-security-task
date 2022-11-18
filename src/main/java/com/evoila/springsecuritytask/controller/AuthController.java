@@ -1,6 +1,7 @@
 package com.evoila.springsecuritytask.controller;
 
 
+import com.evoila.springsecuritytask.model.Role;
 import com.evoila.springsecuritytask.payload.request.AuthenticationRequest;
 import com.evoila.springsecuritytask.payload.request.RegistrationRequest;
 import com.evoila.springsecuritytask.payload.response.AuthenticationResponse;
@@ -8,6 +9,7 @@ import com.evoila.springsecuritytask.payload.response.RegistrationResponse;
 import com.evoila.springsecuritytask.service.AuthenticationService;
 
 import com.evoila.springsecuritytask.service.RegistrationService;
+import com.evoila.springsecuritytask.service.impl.JpaUserService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;

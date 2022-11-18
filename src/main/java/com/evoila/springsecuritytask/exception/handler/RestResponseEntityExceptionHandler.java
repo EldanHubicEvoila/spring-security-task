@@ -12,6 +12,7 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -66,8 +67,22 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> accessDeniedException(Exception ex, WebRequest request) {
+        ErrorResponse errorResponse = ErrorResponse
+                .builder()
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .timeStamp(new Date())
+                .message(ex.getMessage())
+                .description(request.getDescription(false))
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> globalExceptionHandler(Exception ex, WebRequest request) {
+        System.out.println(ex.getClass());
         ErrorResponse errorResponse = ErrorResponse
                 .builder()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())

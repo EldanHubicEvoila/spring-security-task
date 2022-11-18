@@ -1,5 +1,6 @@
 package com.evoila.springsecuritytask.security;
 
+import com.evoila.springsecuritytask.service.UserService;
 import com.evoila.springsecuritytask.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -25,9 +27,12 @@ import javax.servlet.http.HttpServletResponse;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtTokenUtil jwtTokenUtil;
+
+    private final UserService userService;
 
 
     @Bean
@@ -48,7 +53,7 @@ public class SecurityConfig {
                                 }
                         ));
 
-        http.addFilterBefore(new JwtTokenFilter(jwtTokenUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtTokenFilter(jwtTokenUtil, userService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
