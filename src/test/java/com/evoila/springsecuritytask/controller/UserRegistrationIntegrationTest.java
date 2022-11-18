@@ -60,6 +60,7 @@ public class UserRegistrationIntegrationTest {
         testRegistrationRequest.setUsername("testUser");
         testRegistrationRequest.setEmail("testemail@email.com");
         testRegistrationRequest.setPassword("testPw");
+        testRegistrationRequest.setRole("user");
 
         mockMvc.perform(post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)

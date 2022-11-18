@@ -1,6 +1,7 @@
 package com.evoila.springsecuritytask.service.impl;
 
 
+import com.evoila.springsecuritytask.exception.InvalidRoleException;
 import com.evoila.springsecuritytask.exception.UserAlreadyExistsException;
 import com.evoila.springsecuritytask.model.AuthUser;
 import com.evoila.springsecuritytask.model.ERole;
@@ -51,7 +52,7 @@ public class JpaRegistrationService implements RegistrationService {
             Role role = roleService.findRoleByName(ERole.ADMIN);
             roles.add(role);
         } else {
-            throw new IllegalArgumentException("Invalid role: " + request.getRole());
+            throw new InvalidRoleException("Invalid role: " + request.getRole());
         }
 
         authUser.getUser().setRoles(roles);

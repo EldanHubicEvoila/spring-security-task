@@ -1,8 +1,9 @@
 package com.evoila.springsecuritytask.security;
 
 
+import com.evoila.springsecuritytask.dto.EmployeeDTO;
+import com.evoila.springsecuritytask.model.*;
 import com.evoila.springsecuritytask.payload.request.AuthenticationRequest;
-import com.evoila.springsecuritytask.model.User;
 import com.evoila.springsecuritytask.repository.UserRepository;
 import com.evoila.springsecuritytask.util.JsonUtil;
 
@@ -24,8 +25,10 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -59,7 +62,8 @@ public class JwtIntegrationTest {
 
     @BeforeEach
     private void initUser() {
-        userRepository.save(createTestUser());
+        userRepository.save(createUser());
+        userRepository.save(createAdmin());
     }
 
     @AfterEach
@@ -71,7 +75,7 @@ public class JwtIntegrationTest {
     @Test
     @DisplayName("getEmployees()_validJWT_200")
     void getEmployees_whenJwtValid_shouldReturnAllEmployees_200() throws Exception {
-        AuthenticationRequest authenticationRequest = createTestAuthenticationRequest();
+        AuthenticationRequest authenticationRequest = createTestAuthenticationRequestForUser();
         String responseBody = getResponseBodyAfterLogin(authenticationRequest);
         String token = extractJwtFromResponseBody(responseBody);
 
@@ -81,15 +85,83 @@ public class JwtIntegrationTest {
                 .andExpect(status().isOk());
     }
 
-    private User createTestUser() {
-        String password = bCryptPasswordEncoder.encode("testPw");
+    @Test
+    @DisplayName("createEmployee()_validJWT_admin_200")
+    void createEmployee_whenJwtValidAndAdmin_shouldCreateAndReturnEmployee_200() throws Exception {
+        EmployeeDTO testEmployeeDTO = EmployeeDTO.builder()
+                .id(1L)
+                .firstName("testFirstName")
+                .lastName("testLastName")
+                .email("testEmployeeEmail@email.com")
+                .build();
 
-        return new User("testUser", "testemail@email.com", password);
+        AuthenticationRequest authenticationRequest = createTestAuthenticationRequestForAdmin();
+        String responseBody = getResponseBodyAfterLogin(authenticationRequest);
+        String token = extractJwtFromResponseBody(responseBody);
+
+        mockMvc.perform(post("/api/v1/employees")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(testEmployeeDTO))
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isCreated());
     }
 
-    public AuthenticationRequest createTestAuthenticationRequest() {
+    @Test
+    @DisplayName("createEmployee()_validJWT_user_403")
+    void createEmployee_whenJwtValidAndUser_shouldReturnForbidden_403() throws Exception {
+        EmployeeDTO testEmployeeDTO = EmployeeDTO.builder()
+                .id(1L)
+                .firstName("testFirstName")
+                .lastName("testLastName")
+                .email("testEmployeeEmail@email.com")
+                .build();
+
+        AuthenticationRequest authenticationRequest = createTestAuthenticationRequestForUser();
+        String responseBody = getResponseBodyAfterLogin(authenticationRequest);
+        String token = extractJwtFromResponseBody(responseBody);
+
+        mockMvc.perform(post("/api/v1/employees")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(testEmployeeDTO))
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isForbidden());
+    }
+
+    private User createUser() {
+        String password = bCryptPasswordEncoder.encode("testPw");
+        User testUser = new User("testUser", "testemail@email.com", password);
+        Set<Role> roles = new HashSet<>();
+        Role testRole = new Role();
+        testRole.setName("USER");
+        roles.add(testRole);
+        testUser.setRoles(roles);
+
+        return testUser;
+    }
+
+    private User createAdmin() {
+        String password = bCryptPasswordEncoder.encode("testPw");
+        User testAdmin = new User("testAdmin", "testAdminEmail@email.com", password);
+        Set<Role> roles = new HashSet<>();
+        Role testRole = new Role();
+        testRole.setName("ADMIN");
+        roles.add(testRole);
+        testAdmin.setRoles(roles);
+
+        return testAdmin;
+    }
+
+    public AuthenticationRequest createTestAuthenticationRequestForUser() {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setUsername("testUser");
+        authenticationRequest.setPassword("testPw");
+
+        return authenticationRequest;
+    }
+
+    public AuthenticationRequest createTestAuthenticationRequestForAdmin() {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setUsername("testAdmin");
         authenticationRequest.setPassword("testPw");
 
         return authenticationRequest;

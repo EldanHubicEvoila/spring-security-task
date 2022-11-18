@@ -1,8 +1,6 @@
 package com.evoila.springsecuritytask.security;
 
 
-import com.evoila.springsecuritytask.model.AuthUser;
-import com.evoila.springsecuritytask.model.User;
 import com.evoila.springsecuritytask.service.UserService;
 import com.evoila.springsecuritytask.util.JwtTokenUtil;
 
@@ -20,7 +18,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
 
@@ -30,6 +27,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private final JwtTokenUtil jwtUtil;
 
     private final UserService userService;
+
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,

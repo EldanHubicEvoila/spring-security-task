@@ -74,7 +74,7 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN"})
     @DisplayName("createEmployee()_201")
     void createEmployee_whenValidBody_shouldCreateAndReturnNewEmployee_201() throws Exception {
         when(employeeService.createEmployee(any(Employee.class)))
@@ -162,7 +162,7 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN"})
     @DisplayName("updateEmployee()_200")
     void updateEmployee_shouldUpdateExistingEmployee_200() throws Exception {
         when(employeeService.updateEmployee(eq(testEmployeeDTO.getId()), any(Employee.class)))
@@ -208,9 +208,9 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN"})
     @DisplayName("updateEmployee()_noEmployeeFound_404")
-    void updateEmployee_whenEmployeeDoesNotExists_shouldThrowResourceNotFoundException_404() throws Exception {
+    void updateEmployee_whenEmployeeDoesNotExist_shouldThrowResourceNotFoundException_404() throws Exception {
         when(employeeService.updateEmployee(eq(testEmployeeDTO.getId()), any(Employee.class)))
                 .thenThrow(ResourceNotFoundException.class);
 
@@ -230,7 +230,7 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN"})
     @DisplayName("deleteEmployee()_200")
     void deleteEmployee_shouldDeleteExistingEmployee_200() throws Exception {
         when(employeeService.deleteEmployee(testEmployeeDTO.getId()))
@@ -242,7 +242,7 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN"})
     @DisplayName("deleteEmployee()_noEmployeeFound_404")
     void deleteEmployee_whenEmployeeDoesNotExists_shouldThrowResourceNotFoundException_404() throws Exception {
         when(employeeService.deleteEmployee(testEmployeeDTO.getId()))
