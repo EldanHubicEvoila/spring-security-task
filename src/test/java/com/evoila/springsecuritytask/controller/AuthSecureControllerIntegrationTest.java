@@ -1,7 +1,6 @@
 package com.evoila.springsecuritytask.controller;
 
 
-import com.evoila.springsecuritytask.exception.InvalidRoleException;
 import com.evoila.springsecuritytask.exception.UserAlreadyExistsException;
 import com.evoila.springsecuritytask.payload.request.AuthenticationRequest;
 import com.evoila.springsecuritytask.payload.request.RegistrationRequest;
@@ -9,7 +8,6 @@ import com.evoila.springsecuritytask.payload.response.AuthenticationResponse;
 import com.evoila.springsecuritytask.payload.response.RegistrationResponse;
 import com.evoila.springsecuritytask.service.AuthenticationService;
 import com.evoila.springsecuritytask.service.RegistrationService;
-import com.evoila.springsecuritytask.service.UserService;
 import com.evoila.springsecuritytask.util.JsonUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -184,6 +182,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
             testRegistrationRequest.setUsername(null);
             testRegistrationRequest.setPassword("testPw");
             testRegistrationRequest.setEmail("testemail@email.com");
+            testRegistrationRequest.setRole("user");
 
             Mockito.when(registrationService.register(any(RegistrationRequest.class))).thenReturn(null);
 
@@ -200,6 +199,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
             testRegistrationRequest.setUsername("");
             testRegistrationRequest.setPassword("testPw");
             testRegistrationRequest.setEmail("testemail@email.com");
+            testRegistrationRequest.setRole("user");
 
             Mockito.when(registrationService.register(any(RegistrationRequest.class))).thenReturn(null);
 
@@ -216,6 +216,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
             testRegistrationRequest.setUsername("testUser");
             testRegistrationRequest.setPassword(null);
             testRegistrationRequest.setEmail("testemail@email.com");
+            testRegistrationRequest.setRole("user");
 
             Mockito.when(registrationService.register(any(RegistrationRequest.class))).thenReturn(null);
 
@@ -232,6 +233,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
             testRegistrationRequest.setUsername("testUser");
             testRegistrationRequest.setPassword("");
             testRegistrationRequest.setEmail("testemail@email.com");
+            testRegistrationRequest.setRole("user");
 
             Mockito.when(registrationService.register(any(RegistrationRequest.class))).thenReturn(null);
 
@@ -248,6 +250,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
             testRegistrationRequest.setUsername("testUser");
             testRegistrationRequest.setPassword("testPw");
             testRegistrationRequest.setEmail(null);
+            testRegistrationRequest.setRole("user");
 
             Mockito.when(registrationService.register(any(RegistrationRequest.class))).thenReturn(null);
 
@@ -264,6 +267,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
             testRegistrationRequest.setUsername("testUser");
             testRegistrationRequest.setPassword("testPw");
             testRegistrationRequest.setEmail("");
+            testRegistrationRequest.setRole("user");
 
             Mockito.when(registrationService.register(any(RegistrationRequest.class))).thenReturn(null);
 
@@ -280,6 +284,7 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
             testRegistrationRequest.setUsername("testUser");
             testRegistrationRequest.setPassword("testPw");
             testRegistrationRequest.setEmail("bademailformat");
+            testRegistrationRequest.setRole("user");
 
             Mockito.when(registrationService.register(any(RegistrationRequest.class))).thenReturn(null);
 
@@ -291,14 +296,14 @@ class AuthSecureControllerIntegrationTest extends AbstractSecureControllerTest {
 
         @Test
         @DisplayName("register()_invalidRole_400")
-        void register_whenInvalidRole_shouldThrowInvalidRoleException_400() throws Exception{
+        void register_whenInvalidRole_shouldReturnBadRequest_400() throws Exception{
             RegistrationRequest testRegistrationRequest = new RegistrationRequest();
             testRegistrationRequest.setUsername("testUser");
             testRegistrationRequest.setPassword("testPw");
             testRegistrationRequest.setEmail("testemail@email.com");
             testRegistrationRequest.setRole("invalid-role");
 
-            Mockito.when(registrationService.register(any(RegistrationRequest.class))).thenThrow(InvalidRoleException.class);
+            Mockito.when(registrationService.register(any(RegistrationRequest.class))).thenReturn(null);
 
             mockMvc.perform(post("/auth/register")
                             .contentType(MediaType.APPLICATION_JSON)

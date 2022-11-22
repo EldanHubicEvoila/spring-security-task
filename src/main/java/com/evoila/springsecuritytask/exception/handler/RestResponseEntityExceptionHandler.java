@@ -1,7 +1,6 @@
 package com.evoila.springsecuritytask.exception.handler;
 
 
-import com.evoila.springsecuritytask.exception.InvalidRoleException;
 import com.evoila.springsecuritytask.exception.ResourceNotFoundException;
 import com.evoila.springsecuritytask.exception.UserAlreadyExistsException;
 import com.evoila.springsecuritytask.exception.response.ErrorResponse;
@@ -80,18 +79,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(InvalidRoleException.class)
-    public ResponseEntity<ErrorResponse> invalidRoleException(Exception ex, WebRequest request) {
-        ErrorResponse errorResponse = ErrorResponse
-                .builder()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .timeStamp(new Date())
-                .message(ex.getMessage())
-                .description(request.getDescription(false))
-                .build();
-
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> globalExceptionHandler(Exception ex, WebRequest request) {

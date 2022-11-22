@@ -90,7 +90,7 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "ADMIN")
     @DisplayName("createEmployee()_fieldNull_400")
     void createEmployee_whenFieldNull_shouldReturnBadRequest_400() throws Exception {
         testEmployeeDTO.setFirstName(null);
@@ -104,7 +104,7 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "ADMIN")
     @DisplayName("createEmployee()_badEmailFormat_400")
     void createEmployee_whenBadEmailFormat_shouldReturnBadRequest_400() throws Exception {
         testEmployeeDTO.setEmail("badEmailFormat");
@@ -178,7 +178,7 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "ADMIN")
     @DisplayName("updateEmployee()_fieldNull_400")
     void updateEmployee_whenFieldNull_shouldReturnBadRequest_400() throws Exception {
         testEmployeeDTO.setEmail(null);
@@ -193,7 +193,7 @@ class EmployeeSecureControllerIntegrationTest extends AbstractSecureControllerTe
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "ADMIN")
     @DisplayName("updateEmployee()_badEmailFormat_400")
     void updateEmployee_whenBadEmailFormat_shouldReturnBadRequest_400() throws Exception {
         testEmployeeDTO.setEmail("badEmailFormat");

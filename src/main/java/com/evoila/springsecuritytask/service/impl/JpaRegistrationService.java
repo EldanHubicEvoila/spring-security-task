@@ -1,7 +1,6 @@
 package com.evoila.springsecuritytask.service.impl;
 
 
-import com.evoila.springsecuritytask.exception.InvalidRoleException;
 import com.evoila.springsecuritytask.exception.UserAlreadyExistsException;
 import com.evoila.springsecuritytask.model.AuthUser;
 import com.evoila.springsecuritytask.model.ERole;
@@ -44,16 +43,9 @@ public class JpaRegistrationService implements RegistrationService {
 
         Set<Role> roles = new HashSet<>();
         AuthUser authUser = createAuthUser(request);
+        Role role = roleService.findRoleByName(ERole.valueOf(request.getRole().toUpperCase()));
 
-        if(isRoleUser(request)) {
-            Role role = roleService.findRoleByName(ERole.USER);
-            roles.add(role);
-        } else if(isRoleAdmin(request)) {
-            Role role = roleService.findRoleByName(ERole.ADMIN);
-            roles.add(role);
-        } else {
-            throw new InvalidRoleException("Invalid role: " + request.getRole());
-        }
+        roles.add(role);
 
         authUser.getUser().setRoles(roles);
 
@@ -72,14 +64,6 @@ public class JpaRegistrationService implements RegistrationService {
 
     private boolean userWithEmailExists(RegistrationRequest registrationRequest) {
         return userRepository.existsByEmail(registrationRequest.getEmail());
-    }
-
-    private boolean isRoleUser(RegistrationRequest registrationRequest) {
-        return registrationRequest.getRole().toUpperCase().equals(ERole.USER.name());
-    }
-
-    private boolean isRoleAdmin(RegistrationRequest registrationRequest) {
-        return registrationRequest.getRole().toUpperCase().equals(ERole.ADMIN.name());
     }
 
     private AuthUser createAuthUser(RegistrationRequest registrationRequest) {

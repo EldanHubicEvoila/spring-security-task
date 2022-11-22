@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -41,9 +42,9 @@ public class SecurityConfig {
                 .csrf().disable()
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authRequest -> authRequest
-                        .antMatchers("/auth/**")
-                        .permitAll()
-                        .anyRequest().authenticated())
+                        .antMatchers("/auth/**").permitAll()
+                        .antMatchers(HttpMethod.GET).hasAnyRole("USER", "ADMIN")
+                        .antMatchers("/api/v1/**").hasRole("ADMIN"))
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(
                                 (request, response, ex) -> {

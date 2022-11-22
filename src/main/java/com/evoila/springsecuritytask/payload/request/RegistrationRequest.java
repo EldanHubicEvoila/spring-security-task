@@ -1,6 +1,7 @@
 package com.evoila.springsecuritytask.payload.request;
 
 
+import com.evoila.springsecuritytask.validators.RoleNameConstraint;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,5 +29,6 @@ public class RegistrationRequest {
 
     @NotNull(message = "role can't be null")
     @NotEmpty(message = "role can't be empty")
+    @RoleNameConstraint
     private String role;
 }
