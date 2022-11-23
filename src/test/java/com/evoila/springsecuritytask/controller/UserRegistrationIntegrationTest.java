@@ -54,12 +54,13 @@ public class UserRegistrationIntegrationTest {
     }
 
     @Test
-    @DisplayName("register(RegistrationRequest registrationRequest)_shouldRegisterUser_200")
+    @DisplayName("register()_shouldRegisterUser_200")
     void register_whenUserWithUsernameAndEmailDoesNotExist_shouldRegisterUser_200() throws Exception{
         RegistrationRequest testRegistrationRequest = new RegistrationRequest();
         testRegistrationRequest.setUsername("testUser");
         testRegistrationRequest.setEmail("testemail@email.com");
         testRegistrationRequest.setPassword("testPw");
+        testRegistrationRequest.setRole("user");
 
         mockMvc.perform(post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)

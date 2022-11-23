@@ -3,16 +3,22 @@ package com.evoila.springsecuritytask.service.impl;
 
 import com.evoila.springsecuritytask.exception.UserAlreadyExistsException;
 import com.evoila.springsecuritytask.model.AuthUser;
+import com.evoila.springsecuritytask.model.ERole;
+import com.evoila.springsecuritytask.model.Role;
 import com.evoila.springsecuritytask.model.User;
 import com.evoila.springsecuritytask.payload.request.RegistrationRequest;
 import com.evoila.springsecuritytask.payload.response.RegistrationResponse;
 import com.evoila.springsecuritytask.repository.UserRepository;
 import com.evoila.springsecuritytask.service.RegistrationService;
 
+import com.evoila.springsecuritytask.service.RoleService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Service
@@ -20,6 +26,8 @@ import org.springframework.stereotype.Service;
 public class JpaRegistrationService implements RegistrationService {
 
     private final UserRepository userRepository;
+
+    private final RoleService roleService;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -33,7 +41,13 @@ public class JpaRegistrationService implements RegistrationService {
             throw new UserAlreadyExistsException("User with email " + request.getEmail() + " already exists");
         }
 
+        Set<Role> roles = new HashSet<>();
         AuthUser authUser = createAuthUser(request);
+        Role role = roleService.findRoleByName(ERole.valueOf(request.getRole().toUpperCase()));
+
+        roles.add(role);
+
+        authUser.getUser().setRoles(roles);
 
         userRepository.save(authUser.getUser());
 

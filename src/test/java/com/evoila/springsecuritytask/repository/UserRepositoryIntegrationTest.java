@@ -23,7 +23,7 @@ class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
 
 
     @Test
-    @DisplayName("findUserByUsername(String username)_userWithUsernameInDatabase_returnUser")
+    @DisplayName("findUserByUsername()_userWithUsernameInDatabase_returnUser")
     void findUserByUsername_whenUserExistsInDatabase_shouldReturnUser() {
         userRepository.save(new User("testUser", "testuser@email.com", "testUser123"));
 
@@ -35,7 +35,7 @@ class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
     }
 
     @Test
-    @DisplayName("findUserByUsername(String username)_noUserWithUsername_throwNoSuchElementException")
+    @DisplayName("findUserByUsername()_noUserWithUsername_throwNoSuchElementException")
     void findUserByUsername_whenUserDoesNotExistsInDatabase_shouldThrowNoSuchElementException() {
         Optional<User> expectedUser = userRepository.findByUsername("testUser");
 
@@ -43,7 +43,7 @@ class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
     }
 
     @Test
-    @DisplayName("existsByUsername(String username)_whenUserExistsWithSameUsername_shouldReturnTrue")
+    @DisplayName("existsByUsername()_whenUserExistsWithSameUsername_shouldReturnTrue")
     void existsByUsername_whenUserWithSameUsernameExists_shouldReturnTrue() {
         userRepository.save(new User("testUser", "testuser@email.com", "testUser123"));
 
@@ -53,7 +53,7 @@ class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
     }
 
     @Test
-    @DisplayName("existsByUsername(String username)_whenUserDoesNotExistsWithSameUsername_shouldReturnFalse")
+    @DisplayName("existsByUsername()_whenUserDoesNotExistsWithSameUsername_shouldReturnFalse")
     void existsByUsername_whenUserWithSameUsernameDoesNotExists_shouldReturnFalse() {
         userRepository.save(new User("testUser", "testuser@email.com", "testUser123"));
 
@@ -63,7 +63,7 @@ class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
     }
 
     @Test
-    @DisplayName("existsByEmail(String email)_whenUserExistsWithSameEmail_shouldReturnTrue")
+    @DisplayName("existsByEmail()_whenUserExistsWithSameEmail_shouldReturnTrue")
     void existsByEmail_whenUserWithSameEmailExists_shouldReturnTrue() {
         userRepository.save(new User("testUser", "testuser@email.com", "testUser123"));
 
@@ -73,7 +73,7 @@ class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
     }
 
     @Test
-    @DisplayName("existsByUsername(String username)_whenUserDoesNotExistsWithSameEmail_shouldReturnFalse")
+    @DisplayName("existsByUsername()_whenUserDoesNotExistsWithSameEmail_shouldReturnFalse")
     void existsByUsername_whenUserWithSameEmailDoesNotExists_shouldReturnFalse() {
         userRepository.save(new User("testUser", "testuser@email.com", "testUser123"));
 

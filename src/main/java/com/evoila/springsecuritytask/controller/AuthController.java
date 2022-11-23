@@ -8,6 +8,7 @@ import com.evoila.springsecuritytask.payload.response.RegistrationResponse;
 import com.evoila.springsecuritytask.service.AuthenticationService;
 
 import com.evoila.springsecuritytask.service.RegistrationService;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;

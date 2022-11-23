@@ -1,8 +1,7 @@
 package com.evoila.springsecuritytask.security;
 
 
-import com.evoila.springsecuritytask.model.AuthUser;
-import com.evoila.springsecuritytask.model.User;
+import com.evoila.springsecuritytask.service.UserService;
 import com.evoila.springsecuritytask.util.JwtTokenUtil;
 
 import lombok.NonNull;
@@ -19,7 +18,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
 
@@ -27,6 +25,8 @@ import java.io.IOException;
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtil jwtUtil;
+
+    private final UserService userService;
 
 
     @Override
@@ -66,7 +66,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         UserDetails userDetails = getUserDetails(token);
 
         UsernamePasswordAuthenticationToken
-                authentication = new UsernamePasswordAuthenticationToken(userDetails, null, null);
+                authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
@@ -74,14 +74,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     private UserDetails getUserDetails(String token) {
-        AuthUser authUser = new AuthUser(new User());
+        String username = jwtUtil.getUsernameFromToken(token);
 
-        String[] jwtSubject = jwtUtil.getSubject(token).split(",");
-
-        authUser.getUser().setId(Long.parseLong(jwtSubject[0]));
-        authUser.getUser().setUsername(jwtSubject[1]);
-        authUser.getUser().setEmail((jwtSubject[2]));
-
-        return authUser;
+        return userService.loadUserByUsername(username);
     }
 }
