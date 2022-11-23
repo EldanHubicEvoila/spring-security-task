@@ -5,12 +5,9 @@ import com.evoila.springsecuritytask.dto.EmployeeDTO;
 import com.evoila.springsecuritytask.dto.EmployeeMapper;
 import com.evoila.springsecuritytask.model.Employee;
 import com.evoila.springsecuritytask.service.EmployeeService;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

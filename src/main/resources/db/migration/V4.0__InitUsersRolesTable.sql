@@ -4,5 +4,3 @@ CREATE TABLE users_roles (
     CONSTRAINT FK_user_id FOREIGN KEY(user_id) REFERENCES users(id),
     CONSTRAINT FK_role_id FOREIGN KEY(role_id) REFERENCES roles(id)
 );
-
---remove constrains and alter table in new file with cascade delete
